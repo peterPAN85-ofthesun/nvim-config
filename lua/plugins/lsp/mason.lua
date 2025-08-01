@@ -41,7 +41,8 @@ return {
         "svelte",
         "ts_ls",
         "yamlls",
-      },
+		"clangd",
+      }
     })
   end,
 }
