@@ -30,4 +30,5 @@ keymap("n", "<C-l>", "<C-w>l", { desc = "Déplace le curseur dans la fenêtre dr
 keymap("n", "<S-l>", ":bnext<CR>", opts)
 keymap("n", "<S-h>", ":bprevious<CR>", opts)
 
+-- Terminal
 keymap("n", "<leader>t", ":sp term://zsh", { desc = "Affiche le terminal de commande" })
