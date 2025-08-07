@@ -14,21 +14,19 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   end
 end
 vim.opt.rtp:prepend(lazypath)
-  -- vérifie automatiquement les mises à jour des plugins mais sans notifier
-  -- lualine va se charger de nous afficher un icône
-  checker = {
-    enabled = true,
-    notify = false,
-  },
+
 -- Configuration de lazy.nvim et importation du répertoire `plugins`
-
 require("lazy").setup({ { import = "plugins" }, { import = "plugins.lsp"} }, {
-
+	-- vérifie automatiquement les mises à jour des plugins mais sans notifier
+	-- lualine va se charger de nous afficher un icône
+	checker = {
+		enabled = true,
+		notify = false,
+	},
+	-- thème utilisé lors de l'installation de plugins
+	install = { colorscheme = { "tokyonight" } },
 	-- désactive la pénible notification au démarrage
-
-	install = { colorscheme = { "tokyonight"} },
-  change_detection = {
-    notify = false,
-  },
+	change_detection = {
+		notify = false,
+	},
 })
-

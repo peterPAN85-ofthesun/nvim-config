@@ -16,6 +16,8 @@ return {
       -- langages installés et configurés
       ensure_installed = {
         "bash",
+		"c",
+		"cpp",
         "dockerfile",
         "gitignore",
         "html",
@@ -30,10 +32,6 @@ return {
         "typescript",
         "vim",
         "yaml",
-		"arduino",
-		"c",
-		"c_sharp",
-		"cpp",
       },
       -- lorse de l'appui sur <Ctrl-space> sélectionne le bloc
       -- courant spécifique au langage de programmation
