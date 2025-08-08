@@ -32,3 +32,4 @@ keymap("n", "<S-h>", ":bprevious<CR>", opts)
 
 -- Terminal
 keymap("n", "<leader>t", ":sp term://zsh", { desc = "Affiche le terminal de commande" })
+keymap("t", "<ESC>", "<C-\\><C-n>", { desc = "Sort du terminal de commande" })
