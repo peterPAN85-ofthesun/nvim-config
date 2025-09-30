@@ -40,4 +40,4 @@ keymap("n", "<F4>", ":Ouroboros<CR>", { desc = "Switch c<->h or cpp<->hpp" })
 -- Remplacer des caractères
 keymap("n", "<leader>S", ":%s/<C-r><C-w>//gI<Left><Left><Left>",
 	{ desc = "Remplacer caractères sans vérifications" })
-keymap("n", "<leader>s", ":%s/<C-r><C-w>//c><Left><Left>", { desc = "Remplacer caractères" })
+keymap("n", "<leader>s", ":%s/<C-r><C-w>//c<Left><Left>", { desc = "Remplacer caractères" })
