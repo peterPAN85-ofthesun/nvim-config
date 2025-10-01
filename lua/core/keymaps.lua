@@ -38,6 +38,6 @@ keymap("t", "<ESC>", "<C-\\><C-n>", { desc = "Sort du terminal de commande" })
 keymap("n", "<F4>", ":Ouroboros<CR>", { desc = "Switch c<->h or cpp<->hpp" })
 
 -- Remplacer des caractères
-keymap("n", "<leader>S", ":%s/\\<<C-r><C-w>\\>//g<Left><Left>",
+keymap("n", "<leader>S", ":%s/<C-r><C-w>//gc<Left><Left><Left>",
 	{ desc = "Remplacer caractères sans vérifications" })
 keymap("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>//gc<Left><Left><Left>", { desc = "Remplacer caractères" })
