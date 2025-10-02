@@ -1,3 +1,68 @@
+local signature_index = 0
+local signatures = {}
+
+
+-- Fonction pour générer la proposition suivante
+local function show_signature_next()
+	local clients = vim.lsp.get_clients({ bufnr = 0 })
+	local clangd_client = nil
+
+	for _, client in pairs(clients) do
+		if client.name == "clangd" and client.server_capabilities.signatureHelpProvider then
+			clangd_client = client
+			break
+		end
+	end
+
+	if not clangd_client then
+		vim.notify("No clangd LSP client attached to this buffer", vim.log.levels.WARN)
+		return
+	end
+
+	local params = vim.lsp.util.make_position_params()
+
+	clangd_client.request("textDocument/signatureHelp", params, function(err, result)
+		if err or not result or not result.signatures or #result.signatures == 0 then
+			vim.notify("No signatures available", vim.log.levels.INFO)
+			return
+		end
+
+		signatures = result.signatures
+		signature_index = (signature_index % #signatures) + 1
+
+		local sig = signatures[signature_index]
+		local lines = {}
+
+		-- ✅ Ajout du compteur (index / total)
+		table.insert(lines, string.format("(%d/%d)", signature_index, #signatures))
+
+		-- Label de la fonction
+		table.insert(lines, sig.label)
+
+		-- Documentation de la fonction
+		if sig.documentation then
+			if type(sig.documentation) == "string" then
+				table.insert(lines, sig.documentation)
+			elseif sig.documentation.value then
+				table.insert(lines, sig.documentation.value)
+			end
+		end
+
+		-- Documentation des paramètres
+		if sig.parameters then
+			for i, param in ipairs(sig.parameters) do
+				if param.documentation then
+					local doc = type(param.documentation) == "string" and param.documentation or param.documentation.value
+					table.insert(lines, string.format("Param %s: %s", param.label or i, doc))
+				end
+			end
+		end
+
+		vim.lsp.util.open_floating_preview(lines, "markdown", { border = "rounded" })
+	end, 0)
+end
+
+
 return {
 	"neovim/nvim-lspconfig",
 	event = { "BufReadPre", "BufNewFile" },
@@ -38,9 +103,10 @@ return {
 			desc = "Go to next diagnostic",
 			mode = "n",
 		},
-		{ "K",          vim.lsp.buf.hover,                                 desc = "Show documentation for what is under cursor", mode = "n" },
-		{ "<leader>F",  "<cmd>lua vim.lsp.buf.format({async = true})<cr>", desc = "Format buffer",                               mode = { "n", "x" } },
-		{ "<leader>rs", ":LspRestart<CR>",                                 desc = "Restart LSP",                                 mode = "n" },
+		{ "K",          show_signature_next,                               desc = "Show documentation for what is under cursor",     mode = "n" },
+		{ "<leader>K",  vim.lsp.buf.hover,                                 desc = "Show documentation for what is under the cursor", mode = "n" },
+		{ "<leader>F",  "<cmd>lua vim.lsp.buf.format({async = true})<cr>", desc = "Format buffer",                                   mode = { "n", "x" } },
+		{ "<leader>rs", ":LspRestart<CR>",                                 desc = "Restart LSP",                                     mode = "n" },
 	},
 
 
