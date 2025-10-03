@@ -146,6 +146,7 @@ return {
 					"--header-insertion=iwyu",
 					"--completion-style=detailed",
 					"--function-arg-placeholders",
+					"--all-scopes-completion",
 					"--fallback-style=llvm",
 				},
 				init_options = {
