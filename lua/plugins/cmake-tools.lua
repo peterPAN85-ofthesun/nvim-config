@@ -4,12 +4,12 @@ return {
 	config = function()
 		local osys = require("cmake-tools.osys")
 		require("cmake-tools").setup {
-			cmake_command = "cmake",                                      -- this is used to specify cmake command path
-			ctest_command = "ctest",                                      -- this is used to specify ctest command path
+			cmake_command = "cmake",                                       -- this is used to specify cmake command path
+			ctest_command = "ctest",                                       -- this is used to specify ctest command path
 			cmake_use_preset = true,
-			cmake_regenerate_on_save = true,                              -- auto generate when save CMakeLists.txt
+			cmake_regenerate_on_save = true,                               -- auto generate when save CMakeLists.txt
 			cmake_generate_options = { "-DCMAKE_EXPORT_COMPILE_COMMANDS=1" }, -- this will be passed when invoke `CMakeGenerate`
-			cmake_build_options = {},                                     -- this will be passed when invoke `CMakeBuild`
+			cmake_build_options = {},                                      -- this will be passed when invoke `CMakeBuild`
 			-- support macro expansion:
 			--       ${kit}
 			--       ${kitGenerator}
@@ -41,22 +41,22 @@ return {
 				runInTerminal = true,
 				console = "integratedTerminal",
 			},
-			cmake_executor = {                -- executor to use
-				name = "quickfix",              -- name of the executor
-				opts = {},                      -- the options the executor will get, possible values depend on the executor type. See `default_opts` for possible values.
-				default_opts = {                -- a list of default and possible values for executors
+			cmake_executor = {              -- executor to use
+				name = "quickfix",            -- name of the executor
+				opts = {},                    -- the options the executor will get, possible values depend on the executor type. See `default_opts` for possible values.
+				default_opts = {              -- a list of default and possible values for executors
 					quickfix = {
-						show = "always",            -- "always", "only_on_error"
-						position = "belowright",    -- "vertical", "horizontal", "leftabove", "aboveleft", "rightbelow", "belowright", "topleft", "botright", use `:h vertical` for example to see help on them
+						show = "always",          -- "always", "only_on_error"
+						position = "belowright",  -- "vertical", "horizontal", "leftabove", "aboveleft", "rightbelow", "belowright", "topleft", "botright", use `:h vertical` for example to see help on them
 						size = 10,
-						encoding = "utf-8",         -- if encoding is not "utf-8", it will be converted to "utf-8" using `vim.fn.iconv`
+						encoding = "utf-8",       -- if encoding is not "utf-8", it will be converted to "utf-8" using `vim.fn.iconv`
 						auto_close_when_success = true, -- typically, you can use it with the "always" option; it will auto-close the quickfix buffer if the execution is successful.
 					},
 					toggleterm = {
 						direction = "float", -- 'vertical' | 'horizontal' | 'tab' | 'float'
 						close_on_exit = false, -- whether close the terminal when exit
 						auto_scroll = true, -- whether auto scroll to the bottom
-						singleton = true,  -- single instance, autocloses the opened one, if present
+						singleton = true, -- single instance, autocloses the opened one, if present
 					},
 					overseer = {
 						new_task_opts = {
@@ -81,23 +81,23 @@ return {
 
 						-- Window handling
 						single_terminal_per_instance = true, -- Single viewport, multiple windows
-						single_terminal_per_tab = true,   -- Single viewport per tab
+						single_terminal_per_tab = true, -- Single viewport per tab
 						keep_terminal_static_location = true, -- Static location of the viewport if avialable
-						auto_resize = true,               -- Resize the terminal if it already exists
+						auto_resize = true,             -- Resize the terminal if it already exists
 
 						-- Running Tasks
-						start_insert = false,   -- If you want to enter terminal with :startinsert upon using :CMakeRun
-						focus = false,          -- Focus on terminal when cmake task is launched.
+						start_insert = false, -- If you want to enter terminal with :startinsert upon using :CMakeRun
+						focus = false,        -- Focus on terminal when cmake task is launched.
 						do_not_add_newline = false, -- Do not hit enter on the command inserted when using :CMakeRun, allowing a chance to review or modify the command before hitting enter.
-					},                        -- terminal executor uses the values in cmake_terminal
+					},                      -- terminal executor uses the values in cmake_terminal
 				},
 			},
-			cmake_runner = {           -- runner to use
-				name = "terminal",       -- name of the runner
-				opts = {},               -- the options the runner will get, possible values depend on the runner type. See `default_opts` for possible values.
-				default_opts = {         -- a list of default and possible values for runners
+			cmake_runner = {         -- runner to use
+				name = "terminal",     -- name of the runner
+				opts = {},             -- the options the runner will get, possible values depend on the runner type. See `default_opts` for possible values.
+				default_opts = {       -- a list of default and possible values for runners
 					quickfix = {
-						show = "always",     -- "always", "only_on_error"
+						show = "always",   -- "always", "only_on_error"
 						position = "belowright", -- "bottom", "top"
 						size = 10,
 						encoding = "utf-8",
@@ -107,7 +107,7 @@ return {
 						direction = "float", -- 'vertical' | 'horizontal' | 'tab' | 'float'
 						close_on_exit = false, -- whether close the terminal when exit
 						auto_scroll = true, -- whether auto scroll to the bottom
-						singleton = true,  -- single instance, autocloses the opened one, if present
+						singleton = true, -- single instance, autocloses the opened one, if present
 					},
 					overseer = {
 						new_task_opts = {
@@ -129,13 +129,13 @@ return {
 
 						-- Window handling
 						single_terminal_per_instance = true, -- Single viewport, multiple windows
-						single_terminal_per_tab = true,   -- Single viewport per tab
+						single_terminal_per_tab = true, -- Single viewport per tab
 						keep_terminal_static_location = true, -- Static location of the viewport if avialable
-						auto_resize = true,               -- Resize the terminal if it already exists
+						auto_resize = true,             -- Resize the terminal if it already exists
 
 						-- Running Tasks
-						start_insert = false,   -- If you want to enter terminal with :startinsert upon using :CMakeRun
-						focus = false,          -- Focus on terminal when cmake task is launched.
+						start_insert = false, -- If you want to enter terminal with :startinsert upon using :CMakeRun
+						focus = false,        -- Focus on terminal when cmake task is launched.
 						do_not_add_newline = false, -- Do not hit enter on the command inserted when using :CMakeRun, allowing a chance to review or modify the command before hitting enter.
 					},
 				},
@@ -149,5 +149,18 @@ return {
 			cmake_virtual_text_support = true, -- Show the target related to current file using virtual text (at right corner)
 			cmake_use_scratch_buffer = false, -- A buffer that shows what cmake-tools has done
 		}
+
+		vim.keymap.set(
+			"n",
+			"<C-r>",
+			"<cmd>CMakeBuild<cr>",
+			{ desc = "CMakeBuild" }
+		)
+		vim.keymap.set(
+			"n",
+			"<C-p>",
+			"<cmd>CMakeRun<cr>",
+			{ desc = "CMakeBuild" }
+		)
 	end
 }
