@@ -1,4 +1,5 @@
 require("core")
+require("config.filetypes")
 require("config.lazy")
 
 local Plug = vim.fn['plug#']
