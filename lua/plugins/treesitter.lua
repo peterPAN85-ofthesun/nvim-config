@@ -17,8 +17,10 @@ return {
 			ensure_installed = {
 				"bash",
 				"c",
+				"c_sharp", -- C# pour Godot
 				"cpp",
 				"dockerfile",
+				"gdscript", -- GDScript pour Godot
 				"gitignore",
 				"html",
 				"javascript",

@@ -23,6 +23,9 @@ return {
         typescript = { "prettier" },
         typescriptreact = { "prettier" },
         yaml = { "prettier" },
+        -- Godot
+        gdscript = { "gdformat" }, -- GDScript formatter (gdtoolkit)
+        cs = { "csharpier" }, -- C# formatter pour Godot
       },
       format_on_save = {
         lsp_fallback = true,
