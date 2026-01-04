@@ -265,6 +265,29 @@ return {
 			},
 		})
 
+		-- Omnisharp LSP (C#)
+		vim.lsp.config("omnisharp", {
+			cmd = { "omnisharp" },
+			root_markers = {
+				"*.sln",
+				"*.csproj",
+				"omnisharp.json",
+				"function.json",
+				".git",
+			},
+			settings = {
+				FormattingOptions = {
+					EnableEditorConfigSupport = true,
+					OrganizeImports = true,
+				},
+				RoslynExtensionsOptions = {
+					EnableAnalyzersSupport = true,
+					EnableImportCompletion = true,
+					AnalyzeOpenDocumentsOnly = false,
+				},
+			},
+		})
+
 		-- GDScript LSP (connecté à Godot Editor)
 		local util = require("lspconfig.util")
 
@@ -288,6 +311,13 @@ return {
 			pattern = "rust",
 			callback = function()
 				vim.lsp.enable("rust_analyzer")
+			end,
+		})
+
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = "cs",
+			callback = function()
+				vim.lsp.enable("omnisharp")
 			end,
 		})
 
