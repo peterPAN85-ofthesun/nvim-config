@@ -50,6 +50,6 @@ keymap("n", "<leader>S", ":%s/<C-r><C-w>//gc<Left><Left><Left>",
 keymap("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>//gc<Left><Left><Left>", { desc = "Remplacer caractères" })
 
 -- Bindings viewer - show all keybindings from binding_list.csv
-keymap("n", "<leader>e", function()
+keymap("n", "<leader>a", function()
 	require("core.bindings_viewer").show_bindings()
 end, { desc = "Find keybindings (search all bindings)" })
