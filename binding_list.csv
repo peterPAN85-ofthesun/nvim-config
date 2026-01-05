@@ -1,0 +1,190 @@
+binding,function,mode,source,file
+#,Search word under cursor backward,n,vim,native
+$,Move to end of line,n,vim,native
+%,Jump to matching bracket/parenthesis,n,vim,native
+',Jump to mark (followed by letter),n,vim,native
+'',Jump back to previous position,n,vim,native
+",",Repeat last f/t/F/T in opposite direction,n,vim,native
+*,Search word under cursor forward,n,vim,native
+.,Repeat last change,n,vim,native
+/,Search forward,n,vim,native
+0,Move to start of line,n,vim,native
+:e,Edit file,n,vim,native
+:q,Quit,n,vim,native
+:q!,Quit without saving,n,vim,native
+:w,Write/save file,n,vim,native
+:wq,Write and quit,n,vim,native
+;,Repeat last f/t/F/T,n,vim,native
+;;,Exit insert mode,i,conf nvim,lua/core/keymaps.lua
+<,Indent left (operator),n,vim,native
+<<,Indent line left,n,vim,native
+=,Auto-indent (operator),n,vim,native
+==,Auto-indent line,n,vim,native
+>,Indent right (operator),n,vim,native
+>>,Indent line right,n,vim,native
+?,Search backward,n,vim,native
+@,Play macro (followed by register letter),n,vim,native
+@@,Replay last macro,n,vim,native
+A,Enter insert mode at end of line,n,vim,native
+a,Enter insert mode after cursor,n,vim,native
+b,Move to start of previous word,n,vim,native
+C,Change to end of line,n,vim,native
+c,Change (operator),n,vim,native
+cc,Change line,n,vim,native
+cw,Change word,n,vim,native
+D,Delete to end of line,n,vim,native
+d,Delete (operator),n,vim,native
+dd,Delete line,n,vim,native
+dw,Delete word,n,vim,native
+e,Move to end of word,n,vim,native
+F,Find character backward in line,n,vim,native
+f,Find character forward in line,n,vim,native
+G,Go to last line,n,vim,native
+gD,Go to declaration (LSP),n,conf nvim,lua/plugins/lsp/lspconfig.lua
+gd,Show LSP definitions (Telescope),n,conf nvim,lua/plugins/lsp/lspconfig.lua
+gg,Go to first line,n,vim,native
+gi,Show LSP implementations (Telescope),n,conf nvim,lua/plugins/lsp/lspconfig.lua
+gO,Show LSP document symbols (Telescope),n,conf nvim,lua/plugins/lsp/lspconfig.lua
+gR,Show LSP references (Telescope),n,conf nvim,lua/plugins/lsp/lspconfig.lua
+gs,Show LSP signature help,n,conf nvim,lua/plugins/lsp/lspconfig.lua
+gt,Show LSP type definitions (Telescope),n,conf nvim,lua/plugins/lsp/lspconfig.lua
+gu,Make lowercase (operator),n,vim,native
+gU,Make uppercase (operator),n,vim,native
+h,Move cursor left,n,vim,native
+I,Enter insert mode at start of line,n,vim,native
+i,Enter insert mode before cursor,n,vim,native
+ih,Select git hunk (text object),o,conf nvim,lua/plugins/gitsigns.lua
+ih,Select git hunk (text object),x,conf nvim,lua/plugins/gitsigns.lua
+J,Join line below to current line,n,vim,native
+j,Move cursor down,n,vim,native
+K,Show signature help with overload cycling (LSP),n,conf nvim,lua/plugins/lsp/lspconfig.lua
+k,Move cursor up,n,vim,native
+l,Move cursor right,n,vim,native
+m,Set mark (followed by letter),n,vim,native
+N,Repeat search backward,n,vim,native
+n,Repeat search forward,n,vim,native
+O,Open new line above and enter insert mode,n,vim,native
+o,Open new line below and enter insert mode,n,vim,native
+P,Paste before cursor,n,vim,native
+p,Paste after cursor,n,vim,native
+q,Record macro (followed by register letter),n,vim,native
+R,Enter replace mode,n,vim,native
+r,Replace single character,n,vim,native
+S,Substitute line,n,vim,native
+s,Substitute character,n,vim,native
+T,Till character backward in line,n,vim,native
+t,Till character forward in line,n,vim,native
+u,Undo,n,vim,native
+V,Enter visual mode (line-wise),n,vim,native
+v,Enter visual mode (character-wise),n,vim,native
+w,Move to start of next word,n,vim,native
+X,Delete character before cursor,n,vim,native
+x,Delete character under cursor,n,vim,native
+Y,Yank/copy to end of line,n,vim,native
+y,Yank/copy (operator),n,vim,native
+yw,Yank/copy word,n,vim,native
+yy,Yank/copy line,n,vim,native
+ZQ,Quit without saving,n,vim,native
+ZZ,Write and quit,n,vim,native
+{,Move to previous paragraph,n,vim,native
+},Move to next paragraph,n,vim,native
+~,Toggle case of character,n,vim,native
+`,'Jump to exact mark position (followed by letter),n,vim,native
+[d,Go to previous diagnostic,n,conf nvim,lua/plugins/lsp/lspconfig.lua
+[h,Go to previous git hunk,n,conf nvim,lua/plugins/gitsigns.lua
+[t,Go to previous todo comment,n,conf nvim,lua/plugins/todo-comments.lua
+]d,Go to next diagnostic,n,conf nvim,lua/plugins/lsp/lspconfig.lua
+]h,Go to next git hunk,n,conf nvim,lua/plugins/gitsigns.lua
+]t,Go to next todo comment,n,conf nvim,lua/plugins/todo-comments.lua
+^,Move to first non-blank character of line,n,vim,native
+<C-a>,Increment number under cursor,n,vim,native
+<C-b>,Scroll page up,n,vim,native
+<C-b>,Scroll completion docs up,i,conf nvim,lua/plugins/nvim-cmp.lua
+<C-d>,Scroll half page down,n,vim,native
+<C-e>,Abort completion,i,conf nvim,lua/plugins/nvim-cmp.lua
+<C-f>,Scroll page down,n,vim,native
+<C-f>,Scroll completion docs down,i,conf nvim,lua/plugins/nvim-cmp.lua
+<C-h>,Move cursor to left window,n,conf nvim,lua/core/keymaps.lua
+<C-i>,Jump to newer position in jump list,n,vim,native
+<C-j>,Move cursor to window below,n,conf nvim,lua/core/keymaps.lua
+<C-j>,Select next item in Telescope,i,conf nvim,lua/plugins/telescope.lua
+<C-j>,Select next completion item,i,conf nvim,lua/plugins/nvim-cmp.lua
+<C-k>,Move cursor to window above,n,conf nvim,lua/core/keymaps.lua
+<C-k>,Select previous item in Telescope,i,conf nvim,lua/plugins/telescope.lua
+<C-k>,Select previous completion item,i,conf nvim,lua/plugins/nvim-cmp.lua
+<C-l>,Move cursor to right window,n,conf nvim,lua/core/keymaps.lua
+<C-o>,Jump to older position in jump list,n,vim,native
+<C-p>,Run CMake target,n,conf nvim,lua/plugins/cmake-tools.lua
+<C-r>,Build CMake project,n,conf nvim,lua/plugins/cmake-tools.lua
+<C-r>,Redo,n,vim,native
+<C-Space>,Trigger completion menu,i,conf nvim,lua/plugins/nvim-cmp.lua
+<C-u>,Scroll half page up,n,vim,native
+<C-v>,Enter visual block mode,n,vim,native
+<C-w><,Decrease window width,n,vim,native
+<C-w>+,Increase window height,n,vim,native
+<C-w>-,Decrease window height,n,vim,native
+<C-w>=,Equalize window sizes,n,vim,native
+<C-w>>,Increase window width,n,vim,native
+<C-w>c,Close window,n,vim,native
+<C-w>h,Move to left window,n,vim,native
+<C-w>j,Move to window below,n,vim,native
+<C-w>k,Move to window above,n,vim,native
+<C-w>l,Move to right window,n,vim,native
+<C-w>o,Close all other windows,n,vim,native
+<C-w>s,Split window horizontally,n,vim,native
+<C-w>v,Split window vertically,n,vim,native
+<C-w>w,Cycle through windows,n,vim,native
+<C-x>,Decrement number under cursor,n,vim,native
+<CR>,Confirm completion selection,i,conf nvim,lua/plugins/nvim-cmp.lua
+<ESC>,Exit terminal mode,t,conf nvim,lua/core/keymaps.lua
+<F3>,Implement method from header to source (C/C++),n,conf nvim,lua/core/headertosource.lua
+<F4>,Switch between header and source files (C/C++),n,conf nvim,lua/core/keymaps.lua
+<leader>?,Show buffer local keymaps with which-key,n,conf nvim,lua/plugins/whichkey.lua
+<leader>ca,Show code actions (LSP),n,conf nvim,lua/plugins/lsp/lspconfig.lua
+<leader>ca,Show code actions (LSP),v,conf nvim,lua/plugins/lsp/lspconfig.lua
+<leader>ch,Switch between source and header (clangd),n,conf nvim,lua/plugins/lsp/lspconfig.lua
+<leader>cl,Show LSP definitions/references (Trouble),n,conf nvim,lua/plugins/trouble.lua
+<leader>cs,Show symbols (Trouble),n,conf nvim,lua/plugins/trouble.lua
+<leader>d,Show line diagnostics,n,conf nvim,lua/plugins/lsp/lspconfig.lua
+<leader>D,Show buffer diagnostics (Telescope),n,conf nvim,lua/plugins/lsp/lspconfig.lua
+<leader>e,Toggle file explorer (NvimTree),n,conf nvim,lua/plugins/nvim-tree.lua
+<leader>F,Format buffer (LSP),n,conf nvim,lua/plugins/lsp/lspconfig.lua
+<leader>F,Format buffer (LSP),x,conf nvim,lua/plugins/lsp/lspconfig.lua
+<leader>fb,Find buffers (Telescope),n,conf nvim,lua/plugins/telescope.lua
+<leader>ff,Find files (Telescope),n,conf nvim,lua/plugins/telescope.lua
+<leader>fg,Live grep in files (Telescope),n,conf nvim,lua/plugins/telescope.lua
+<leader>fx,Grep word under cursor (Telescope),n,conf nvim,lua/plugins/telescope.lua
+<leader>hb,Show git blame for line,n,conf nvim,lua/plugins/gitsigns.lua
+<leader>hB,Toggle current line git blame,n,conf nvim,lua/plugins/gitsigns.lua
+<leader>hd,Show git diff,n,conf nvim,lua/plugins/gitsigns.lua
+<leader>hD,Show git diff against HEAD~,n,conf nvim,lua/plugins/gitsigns.lua
+<leader>hp,Preview git hunk,n,conf nvim,lua/plugins/gitsigns.lua
+<leader>hr,Reset git hunk,n,conf nvim,lua/plugins/gitsigns.lua
+<leader>hr,Reset git hunk,v,conf nvim,lua/plugins/gitsigns.lua
+<leader>hR,Reset buffer to HEAD,n,conf nvim,lua/plugins/gitsigns.lua
+<leader>hs,Stage git hunk,n,conf nvim,lua/plugins/gitsigns.lua
+<leader>hs,Stage git hunk,v,conf nvim,lua/plugins/gitsigns.lua
+<leader>hS,Stage entire buffer,n,conf nvim,lua/plugins/gitsigns.lua
+<leader>hu,Undo stage git hunk,n,conf nvim,lua/plugins/gitsigns.lua
+<leader>K,Show hover documentation (LSP),n,conf nvim,lua/plugins/lsp/lspconfig.lua
+<leader>mp,Format file or range (conform),n,conf nvim,lua/plugins/conform.lua
+<leader>mp,Format file or range (conform),v,conf nvim,lua/plugins/conform.lua
+<leader>nh,Clear search highlight,n,conf nvim,lua/core/keymaps.lua
+<leader>rn,Rename symbol (LSP),n,conf nvim,lua/plugins/lsp/lspconfig.lua
+<leader>rs,Restart LSP,n,conf nvim,lua/plugins/lsp/lspconfig.lua
+<leader>s,Search and replace word under cursor (with word boundaries),n,conf nvim,lua/core/keymaps.lua
+<leader>S,Search and replace word under cursor (without word boundaries),n,conf nvim,lua/core/keymaps.lua
+<leader>t,Open terminal in horizontal split,n,conf nvim,lua/core/keymaps.lua
+<leader>xL,Toggle location list (Trouble),n,conf nvim,lua/plugins/trouble.lua
+<leader>xQ,Toggle quickfix list (Trouble),n,conf nvim,lua/plugins/trouble.lua
+<leader>xx,Toggle diagnostics (Trouble),n,conf nvim,lua/plugins/trouble.lua
+<leader>xX,Toggle buffer diagnostics (Trouble),n,conf nvim,lua/plugins/trouble.lua
+<S-h>,Go to previous buffer,n,conf nvim,lua/core/keymaps.lua
+<S-i>,Move selected text up,v,conf nvim,lua/core/keymaps.lua
+<S-i>,Move selected text up,x,conf nvim,lua/core/keymaps.lua
+<S-k>,Move selected text down,v,conf nvim,lua/core/keymaps.lua
+<S-k>,Move selected text down,x,conf nvim,lua/core/keymaps.lua
+<S-l>,Go to next buffer,n,conf nvim,lua/core/keymaps.lua
+zb,Move cursor line to bottom of screen,n,vim,native
+zt,Move cursor line to top of screen,n,vim,native
+zz,Center cursor line on screen,n,vim,native
