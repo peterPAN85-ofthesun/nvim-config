@@ -34,6 +34,13 @@ keymap("n", "<S-h>", ":bprevious<CR>", opts)
 keymap("n", "<leader>t", ":sp term://zsh<CR>", { desc = "Affiche le terminal de commande" })
 keymap("t", "<ESC>", "<C-\\><C-n>", { desc = "Sort du terminal de commande" })
 
+-- Terminator externe dans le répertoire de config Neovim
+keymap("n", "<leader>T", function()
+	local nvim_config_dir = vim.fn.stdpath("config")
+	vim.fn.jobstart({ "terminator", "--working-directory=" .. nvim_config_dir }, { detach = true })
+	vim.notify("Opening Terminator in " .. nvim_config_dir, vim.log.levels.INFO)
+end, { desc = "Ouvrir Terminator dans ~/.config/nvim" })
+
 -- Ouroboros : switch beetwen c<->h our cpp<->hpp
 keymap("n", "<F4>", ":Ouroboros<CR>", { desc = "Switch c<->h or cpp<->hpp" })
 
@@ -41,3 +48,8 @@ keymap("n", "<F4>", ":Ouroboros<CR>", { desc = "Switch c<->h or cpp<->hpp" })
 keymap("n", "<leader>S", ":%s/<C-r><C-w>//gc<Left><Left><Left>",
 	{ desc = "Remplacer caractères sans vérifications" })
 keymap("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>//gc<Left><Left><Left>", { desc = "Remplacer caractères" })
+
+-- Bindings viewer - show all keybindings from binding_list.csv
+keymap("n", "<leader>e", function()
+	require("core.bindings_viewer").show_bindings()
+end, { desc = "Find keybindings (search all bindings)" })
