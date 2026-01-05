@@ -10,6 +10,10 @@ return {
 		-- import de mason-lspconfig
 		local mason_lspconfig = require("mason-lspconfig")
 
+		-- Ajoute le chemin bin de Mason au PATH pour que godotdev.nvim trouve omnisharp
+		local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
+		vim.env.PATH = mason_bin .. ":" .. vim.env.PATH
+
 		-- Active mason et personnalise les icônes
 		mason.setup({
 			ui = {

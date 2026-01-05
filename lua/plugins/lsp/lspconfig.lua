@@ -265,9 +265,17 @@ return {
 			},
 		})
 
-		-- Omnisharp LSP (C#)
+		-- Obtenir les capabilities de nvim-cmp pour l'autocomplétion intelligente
+		local capabilities = vim.lsp.protocol.make_client_capabilities()
+		local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+		if has_cmp then
+			capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
+		end
+
+		-- Omnisharp LSP (C# pour projets NON-Godot uniquement)
+		-- Pour les projets Godot, godotdev.nvim gère omnisharp automatiquement
 		vim.lsp.config("omnisharp", {
-			cmd = { "omnisharp" },
+			cmd = { vim.fn.stdpath("data") .. "/mason/bin/omnisharp", "--languageserver" },
 			root_markers = {
 				"*.sln",
 				"*.csproj",
@@ -275,6 +283,7 @@ return {
 				"function.json",
 				".git",
 			},
+			capabilities = capabilities,
 			settings = {
 				FormattingOptions = {
 					EnableEditorConfigSupport = true,
@@ -283,20 +292,16 @@ return {
 				RoslynExtensionsOptions = {
 					EnableAnalyzersSupport = true,
 					EnableImportCompletion = true,
-					AnalyzeOpenDocumentsOnly = false,
+					EnableDecompilationSupport = true,
+				},
+				MsBuild = {
+					LoadProjectsOnDemand = false,
 				},
 			},
 		})
 
 		-- GDScript LSP (connecté à Godot Editor)
 		local util = require("lspconfig.util")
-
-		-- Obtenir les capabilities de nvim-cmp pour l'autocomplétion intelligente
-		local capabilities = vim.lsp.protocol.make_client_capabilities()
-		local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-		if has_cmp then
-			capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
-		end
 
 		-- Activer automatiquement les LSP pour les bons filetypes
 		vim.api.nvim_create_autocmd("FileType", {
@@ -316,8 +321,19 @@ return {
 
 		vim.api.nvim_create_autocmd("FileType", {
 			pattern = "cs",
-			callback = function()
-				vim.lsp.enable("omnisharp")
+			callback = function(ev)
+				-- Vérifier si c'est un projet Godot
+				local godot_root = util.root_pattern("project.godot")(ev.file)
+
+				if godot_root then
+					-- Projet Godot : godotdev.nvim gère omnisharp, on configure juste l'indentation
+					vim.bo[ev.buf].tabstop = 4
+					vim.bo[ev.buf].shiftwidth = 4
+					vim.bo[ev.buf].expandtab = false
+				else
+					-- Projet C# non-Godot : activer omnisharp manuellement
+					vim.lsp.enable("omnisharp")
+				end
 			end,
 		})
 

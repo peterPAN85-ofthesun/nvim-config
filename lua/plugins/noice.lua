@@ -24,6 +24,10 @@ return {
 					["vim.lsp.util.stylize_markdown"] = true,
 					["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
 				},
+				-- Désactiver les messages LSP pour éviter les conflits avec godotdev.nvim
+				message = {
+					enabled = false,
+				},
 			},
 			-- you can enable a preset for easier configuration
 			presets = {
