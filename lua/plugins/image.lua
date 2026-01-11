@@ -3,6 +3,10 @@ return {
 	dependencies = {
 		"leafo/magick",
 	},
+	-- Ne charge pas en mode headless (évite les erreurs lors des tests)
+	cond = function()
+		return #vim.api.nvim_list_uis() > 0
+	end,
 	config = function()
 		require("image").setup({
 			-- backend = "ueberzug",

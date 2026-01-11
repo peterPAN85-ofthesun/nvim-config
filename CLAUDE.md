@@ -4,15 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture Overview
 
-This is a Neovim configuration built with **lazy.nvim** as the plugin manager. The configuration uses a dual plugin management approach:
-- **lazy.nvim**: Modern Lua-based plugin manager (primary)
-- **vim-plug**: Legacy plugin manager for a few remaining plugins (tpope/vim-sensible, plenary.nvim, jakemason/ouroboros)
+This is a Neovim configuration built with **lazy.nvim** as the plugin manager.
 
 ### Directory Structure
 
 ```
 .
-├── init.lua                    # Entry point: loads core, filetypes, lazy, and vim-plug
+├── init.lua                    # Entry point: loads core, filetypes, and lazy.nvim
 ├── lua/
 │   ├── core/
 │   │   ├── init.lua           # Loads options, keymaps, headertosource

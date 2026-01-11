@@ -26,7 +26,6 @@ return {
 		})
 
 		mason_lspconfig.setup({
-			automatic_enable = true,
 			-- Liste des serveurs à installer par défaut
 			-- List des serveurs possibles : https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
 			-- Vous pouvez ne pas en mettre ici et tout installer en utilisant :Mason

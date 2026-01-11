@@ -41,9 +41,6 @@ keymap("n", "<leader>T", function()
 	vim.notify("Opening Terminator in " .. nvim_config_dir, vim.log.levels.INFO)
 end, { desc = "Ouvrir Terminator dans ~/.config/nvim" })
 
--- Ouroboros : switch beetwen c<->h our cpp<->hpp
-keymap("n", "<F4>", ":Ouroboros<CR>", { desc = "Switch c<->h or cpp<->hpp" })
-
 -- Remplacer des caractères
 keymap("n", "<leader>S", ":%s/<C-r><C-w>//gc<Left><Left><Left>",
 	{ desc = "Remplacer caractères sans vérifications" })

@@ -1,33 +1,54 @@
 return {
 	"nvim-treesitter/nvim-treesitter",
+	lazy = false, -- nvim-treesitter ne supporte pas le lazy-loading
 	build = ":TSUpdate",
 	config = function()
-		local treesitter = require("nvim-treesitter.configs")
+		local treesitter = require("nvim-treesitter")
 
-		-- configuration de treesitter
+		-- Configuration de base de treesitter
 		treesitter.setup({
-			-- activation de la coloration syntaxique
-			highlight = {
-				enable = true,
-			},
-			-- activation de l'indentation améliorée
-			indent = { enable = true },
+			install_dir = vim.fn.stdpath("data") .. "/site",
+		})
 
-			-- langages installés et configurés
-			ensure_installed = {
+		-- Installation des parsers
+		local parsers = {
+			"bash",
+			"c",
+			"c_sharp", -- C# pour Godot
+			"cpp",
+			"dockerfile",
+			"gdscript", -- GDScript pour Godot
+			"gitignore",
+			"html",
+			"javascript",
+			"json",
+			"lua",
+			"markdown",
+			"markdown_inline",
+			"python",
+			"rst",
+			"rust",
+			"typescript",
+			"vim",
+			"yaml",
+		}
+		treesitter.install(parsers)
+
+		-- Activation automatique du highlighting treesitter pour les langages supportés
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = {
 				"bash",
 				"c",
-				"c_sharp", -- C# pour Godot
 				"cpp",
+				"c_sharp",
 				"dockerfile",
-				"gdscript", -- GDScript pour Godot
+				"gdscript",
 				"gitignore",
 				"html",
 				"javascript",
 				"json",
 				"lua",
 				"markdown",
-				"markdown_inline",
 				"python",
 				"rst",
 				"rust",
@@ -35,17 +56,20 @@ return {
 				"vim",
 				"yaml",
 			},
-			-- lorse de l'appui sur <Ctrl-space> sélectionne le bloc
-			-- courant spécifique au langage de programmation
-			incremental_selection = {
-				enable = true,
-				keymaps = {
-					init_selection = "<C-space>",
-					node_incremental = "<C-space>",
-					scope_incremental = false,
-					node_decremental = "<bs>",
-				},
-			},
+			callback = function()
+				-- Active le highlighting treesitter (avec gestion d'erreur)
+				local ok, err = pcall(vim.treesitter.start)
+				if not ok then
+					-- Silencieusement ignorer si le parser n'existe pas
+					return
+				end
+
+				-- Active l'indentation treesitter (expérimental) uniquement pour certains langages
+				local indent_langs = { "python", "lua", "javascript", "typescript", "rust", "c", "cpp" }
+				if vim.tbl_contains(indent_langs, vim.bo.filetype) then
+					vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+				end
+			end,
 		})
 	end,
 }
