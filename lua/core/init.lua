@@ -1,3 +1,5 @@
 require("core.options")
 require("core.keymaps")
 require("core.headertosource")
+require("core.smart_comment")
+require("core.binding_updater")

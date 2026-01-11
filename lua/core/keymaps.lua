@@ -53,3 +53,6 @@ keymap("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>//gc<Left><Left><Left>", { desc = 
 keymap("n", "<leader>a", function()
 	require("core.bindings_viewer").show_bindings()
 end, { desc = "Find keybindings (search all bindings)" })
+
+-- Update bindings from git diff
+keymap("n", "<leader>bu", ":UpdateBindings<CR>", { desc = "Update binding_list.csv from git diff" })

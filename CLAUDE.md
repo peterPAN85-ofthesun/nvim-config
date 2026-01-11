@@ -142,3 +142,50 @@ Root detection: `compile_commands.json`, `CMakeLists.txt`, Makefile, `.git` (lsp
 3. **Custom keybindings**: Global keymaps go in `core/keymaps.lua`, plugin-specific keymaps in the plugin's config file.
 
 4. **C++ method implementation**: Position cursor on method declaration in header, press F3. The method will be generated in the corresponding .cpp file with class scope and skeleton implementation.
+
+## CRITICAL: Keybinding Documentation Update - AUTOMATIC EXECUTION REQUIRED
+
+**MANDATORY RULE FOR CLAUDE CODE**: Whenever you (Claude) add, modify, or remove keybindings in the Neovim configuration, you MUST **IMMEDIATELY AND AUTOMATICALLY** execute the `:UpdateBindings` command to update `binding_list.csv`. This is NOT optional.
+
+### Automatic Update System
+The configuration includes a custom Lua module (`lua/core/binding_updater.lua`) that automatically detects keybinding changes using `git diff` and updates `binding_list.csv` accordingly.
+
+### STRICT EXECUTION PROTOCOL for Claude Code:
+
+**YOU MUST FOLLOW THIS WORKFLOW EVERY SINGLE TIME:**
+
+1. After adding, modifying, or removing ANY keybinding in ANY `.lua` file
+2. IMMEDIATELY execute this Bash command (no exceptions):
+   ```bash
+   nvim --headless -c "UpdateBindings" -c "qa" 2>&1 | grep -A 20 "Analyzing git diff"
+   ```
+3. Verify the output shows the binding was detected and added/updated
+4. NEVER skip this step, even for a single keybinding change
+
+### What triggers automatic execution:
+- ✅ Adding new `vim.keymap.set()` or `keymap()` calls
+- ✅ Modifying existing keybindings (changing key, mode, or description)
+- ✅ Removing keybindings
+- ✅ ANY change to files containing `vim.keymap.set()` or `keymap()`
+
+### How it works:
+1. Running `git diff` to detect modified `.lua` files
+2. Parsing added/modified lines containing `vim.keymap.set()` or `keymap()` calls
+3. Extracting binding information (key, mode, description, source file)
+4. Automatically updating or adding entries to `binding_list.csv`
+
+### Example of CORRECT workflow:
+```
+1. You edit lua/plugins/foo.lua and add: keymap("n", "<leader>x", ":Foo<CR>", { desc = "Run Foo" })
+2. YOU IMMEDIATELY run: nvim --headless -c "UpdateBindings" -c "qa" 2>&1 | grep -A 20 "Analyzing git diff"
+3. You verify output: "Found 1 new/modified keybinding(s)" and "Successfully updated binding_list.csv"
+4. You inform the user that the binding_list.csv has been updated
+```
+
+### Manual usage (for the user):
+- **From Neovim**: Type `:UpdateBindings` or press `<leader>bu`
+- **From CLI**: `nvim --headless -c "UpdateBindings" -c "qa"`
+
+**CRITICAL**: This system only detects changes in uncommitted modifications (git diff). The CSV is updated BEFORE committing, so git diff can detect the changes.
+
+**DO NOT** manually edit `binding_list.csv` - always use the automated system to ensure consistency and completeness.
