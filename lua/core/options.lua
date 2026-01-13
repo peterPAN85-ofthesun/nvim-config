@@ -31,6 +31,54 @@ opt.backspace = "indent,eol,start" -- on autorise l'utilisation de retour quand 
 -- presse papier
 opt.clipboard = "unnamedplus" -- on utilise le presse papier du système par défaut
 
+-- Configuration explicite du provider clipboard
+-- Détection automatique de l'environnement (Wayland ou X11)
+local function setup_clipboard()
+	-- Détecte le socket Wayland disponible
+	local uid = vim.loop.getuid()
+	local wayland_socket = vim.fn.glob("/run/user/" .. uid .. "/wayland-*")
+	if wayland_socket ~= "" then
+		-- Extrait le nom du socket (ex: wayland-1)
+		local socket_name = vim.fn.fnamemodify(wayland_socket, ":t"):gsub("%.lock$", "")
+		if not socket_name:match("%.lock$") then
+			vim.env.WAYLAND_DISPLAY = socket_name
+		end
+	end
+
+	-- Configure le provider en fonction de l'environnement
+	if vim.env.WAYLAND_DISPLAY then
+		-- Wayland avec wl-clipboard
+		vim.g.clipboard = {
+			name = "wl-clipboard",
+			copy = {
+				["+"] = "wl-copy",
+				["*"] = "wl-copy",
+			},
+			paste = {
+				["+"] = "wl-paste --no-newline",
+				["*"] = "wl-paste --no-newline",
+			},
+			cache_enabled = 1,
+		}
+	elseif vim.env.DISPLAY then
+		-- X11 avec xclip
+		vim.g.clipboard = {
+			name = "xclip",
+			copy = {
+				["+"] = "xclip -quiet -i -selection clipboard",
+				["*"] = "xclip -quiet -i -selection primary",
+			},
+			paste = {
+				["+"] = "xclip -o -selection clipboard",
+				["*"] = "xclip -o -selection primary",
+			},
+			cache_enabled = 1,
+		}
+	end
+end
+
+setup_clipboard()
+
 -- split des fenêtres
 opt.splitright = true     -- le split vertical d'une fenêtre s'affiche à droite
 opt.splitbelow = true     -- le split horizontal d'une fenêtre s'affiche en bas
@@ -44,3 +92,6 @@ opt.iskeyword:append("-") -- on traite les mots avec des - comme un seul mot
 -- affichage des caractères spéciaux
 opt.list = true
 opt.listchars:append({ nbsp = "␣", trail = "•", precedes = "«", extends = "»", tab = "> " })
+
+-- désactivation des providers non utilisés
+vim.g.loaded_perl_provider = 0 -- désactive le provider Perl (rarement utilisé)
