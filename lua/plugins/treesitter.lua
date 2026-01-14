@@ -3,52 +3,25 @@ return {
 	lazy = false, -- nvim-treesitter ne supporte pas le lazy-loading
 	build = ":TSUpdate",
 	config = function()
-		local treesitter = require("nvim-treesitter")
+		local configs = require("nvim-treesitter.configs")
 
 		-- Configuration de base de treesitter
-		treesitter.setup({
-			install_dir = vim.fn.stdpath("data") .. "/site",
-		})
-
-		-- Installation des parsers
-		local parsers = {
-			"bash",
-			"c",
-			"c_sharp", -- C# pour Godot
-			"cpp",
-			"dockerfile",
-			"gdscript", -- GDScript pour Godot
-			"gitignore",
-			"html",
-			"javascript",
-			"json",
-			"lua",
-			"markdown",
-			"markdown_inline",
-			"python",
-			"rst",
-			"rust",
-			"typescript",
-			"vim",
-			"yaml",
-		}
-		treesitter.install(parsers)
-
-		-- Activation automatique du highlighting treesitter pour les langages supportés
-		vim.api.nvim_create_autocmd("FileType", {
-			pattern = {
+		configs.setup({
+			-- Installation automatique des parsers
+			ensure_installed = {
 				"bash",
 				"c",
+				"c_sharp", -- C# pour Godot
 				"cpp",
-				"c_sharp",
 				"dockerfile",
-				"gdscript",
+				"gdscript", -- GDScript pour Godot
 				"gitignore",
 				"html",
 				"javascript",
 				"json",
 				"lua",
 				"markdown",
+				"markdown_inline",
 				"python",
 				"rst",
 				"rust",
@@ -56,20 +29,17 @@ return {
 				"vim",
 				"yaml",
 			},
-			callback = function()
-				-- Active le highlighting treesitter (avec gestion d'erreur)
-				local ok, err = pcall(vim.treesitter.start)
-				if not ok then
-					-- Silencieusement ignorer si le parser n'existe pas
-					return
-				end
-
-				-- Active l'indentation treesitter (expérimental) uniquement pour certains langages
-				local indent_langs = { "python", "lua", "javascript", "typescript", "rust", "c", "cpp" }
-				if vim.tbl_contains(indent_langs, vim.bo.filetype) then
-					vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-				end
-			end,
+			-- Installer automatiquement les parsers manquants lors de l'ouverture de fichiers
+			auto_install = true,
+			-- Configuration du highlighting
+			highlight = {
+				enable = true,
+				additional_vim_regex_highlighting = false,
+			},
+			-- Configuration de l'indentation
+			indent = {
+				enable = true,
+			},
 		})
 	end,
 }
