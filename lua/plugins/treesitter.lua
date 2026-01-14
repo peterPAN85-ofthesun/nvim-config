@@ -3,10 +3,7 @@ return {
 	lazy = false, -- nvim-treesitter ne supporte pas le lazy-loading
 	build = ":TSUpdate",
 	config = function()
-		local configs = require("nvim-treesitter.configs")
-
-		-- Configuration de base de treesitter
-		configs.setup({
+		require("nvim-treesitter").setup({
 			-- Installation automatique des parsers
 			ensure_installed = {
 				"bash",
