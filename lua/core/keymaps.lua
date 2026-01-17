@@ -37,13 +37,26 @@ keymap("t", "<ESC>", "<C-\\><C-n>", { desc = "Sort du terminal de commande" })
 -- Terminal externe dans le répertoire de config Neovim
 keymap("n", "<leader>T", function()
 	local nvim_config_dir = vim.fn.stdpath("config")
-
-	-- Liste de terminaux courants à essayer si $TERMINAL n'est pas défini
-	local fallback_terminals = { "kitty", "alacritty", "wezterm", "konsole", "gnome-terminal", "xterm" }
 	local terminal_cmd = vim.env.TERMINAL
 
-	-- Si $TERMINAL n'est pas défini, chercher un terminal disponible
+	-- Si $TERMINAL n'est pas défini, essayer de détecter le terminal parent
 	if not terminal_cmd then
+		-- Essayer de détecter le terminal en cours via les processus parents
+		local handle = io.popen("ps -o comm= -p $(ps -o ppid= -p $PPID 2>/dev/null | tr -d ' ') 2>/dev/null")
+		if handle then
+			local parent_process = handle:read("*l")
+			handle:close()
+			if parent_process then
+				-- Nettoyer le nom du processus (enlever le chemin)
+				terminal_cmd = parent_process:match("([^/]+)$")
+			end
+		end
+	end
+
+	-- Si toujours pas trouvé, chercher un terminal disponible
+	if not terminal_cmd or vim.fn.executable(terminal_cmd) == 0 then
+		local fallback_terminals = { "x-terminal-emulator", "gnome-terminal", "konsole", "xfce4-terminal", "alacritty", "kitty", "wezterm", "xterm" }
+		terminal_cmd = nil
 		for _, term in ipairs(fallback_terminals) do
 			if vim.fn.executable(term) == 1 then
 				terminal_cmd = term
