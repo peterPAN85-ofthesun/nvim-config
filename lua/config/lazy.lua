@@ -24,7 +24,7 @@ require("lazy").setup({ { import = "plugins" }, { import = "plugins.lsp" } }, {
 		notify = false,
 	},
 	-- thème utilisé lors de l'installation de plugins
-	install = { colorscheme = { "tokyonight" } },
+	install = { colorscheme = { "cyberdream" } },
 	-- désactive la pénible notification au démarrage
 	change_detection = {
 		notify = false,
