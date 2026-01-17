@@ -31,13 +31,31 @@ keymap("n", "<S-l>", ":bnext<CR>", opts)
 keymap("n", "<S-h>", ":bprevious<CR>", opts)
 
 -- Terminal
-keymap("n", "<leader>t", ":sp term://zsh<CR>", { desc = "Affiche le terminal de commande" })
+keymap("n", "<leader>t", ":sp term://" .. (vim.env.SHELL or "bash") .. "<CR>", { desc = "Affiche le terminal de commande" })
 keymap("t", "<ESC>", "<C-\\><C-n>", { desc = "Sort du terminal de commande" })
 
 -- Terminal externe dans le répertoire de config Neovim
 keymap("n", "<leader>T", function()
 	local nvim_config_dir = vim.fn.stdpath("config")
-	local terminal_cmd = vim.env.TERMINAL or "kitty"
+
+	-- Liste de terminaux courants à essayer si $TERMINAL n'est pas défini
+	local fallback_terminals = { "kitty", "alacritty", "wezterm", "konsole", "gnome-terminal", "xterm" }
+	local terminal_cmd = vim.env.TERMINAL
+
+	-- Si $TERMINAL n'est pas défini, chercher un terminal disponible
+	if not terminal_cmd then
+		for _, term in ipairs(fallback_terminals) do
+			if vim.fn.executable(term) == 1 then
+				terminal_cmd = term
+				break
+			end
+		end
+	end
+
+	if not terminal_cmd then
+		vim.notify("Aucun terminal trouvé. Définissez $TERMINAL ou installez un terminal.", vim.log.levels.ERROR)
+		return
+	end
 
 	-- Extraire le nom du programme (avant le premier espace) pour le test d'exécutabilité
 	local terminal_name = terminal_cmd:match("^(%S+)")
