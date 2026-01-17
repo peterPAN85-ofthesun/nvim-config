@@ -20,6 +20,11 @@ return {
         path_display = { "smart" },
         file_ignore_patterns = { ".git/", "node_modules" },
 
+        -- Fix ft_to_lang error by disabling treesitter highlighting in previewer
+        preview = {
+          treesitter = false,
+        },
+
         mappings = {
           i = {
             ["<C-j>"] = actions.move_selection_next,

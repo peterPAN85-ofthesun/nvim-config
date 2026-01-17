@@ -34,12 +34,27 @@ keymap("n", "<S-h>", ":bprevious<CR>", opts)
 keymap("n", "<leader>t", ":sp term://zsh<CR>", { desc = "Affiche le terminal de commande" })
 keymap("t", "<ESC>", "<C-\\><C-n>", { desc = "Sort du terminal de commande" })
 
--- Terminator externe dans le répertoire de config Neovim
+-- Terminal externe dans le répertoire de config Neovim
 keymap("n", "<leader>T", function()
 	local nvim_config_dir = vim.fn.stdpath("config")
-	vim.fn.jobstart({ "terminator", "--working-directory=" .. nvim_config_dir }, { detach = true })
-	vim.notify("Opening Terminator in " .. nvim_config_dir, vim.log.levels.INFO)
-end, { desc = "Ouvrir Terminator dans ~/.config/nvim" })
+	local terminal_cmd = vim.env.TERMINAL or "kitty"
+
+	-- Extraire le nom du programme (avant le premier espace) pour le test d'exécutabilité
+	local terminal_name = terminal_cmd:match("^(%S+)")
+
+	if vim.fn.executable(terminal_name) == 1 then
+		-- Découper la commande en arguments pour jobstart
+		local cmd_parts = {}
+		for part in terminal_cmd:gmatch("%S+") do
+			table.insert(cmd_parts, part)
+		end
+
+		vim.fn.jobstart(cmd_parts, { cwd = nvim_config_dir, detach = true })
+		vim.notify("Opening " .. terminal_cmd .. " in " .. nvim_config_dir, vim.log.levels.INFO)
+	else
+		vim.notify("Terminal not found: " .. terminal_name, vim.log.levels.ERROR)
+	end
+end, { desc = "Ouvrir le terminal par défaut dans ~/.config/nvim" })
 
 -- Remplacer des caractères
 keymap("n", "<leader>S", ":%s/<C-r><C-w>//gc<Left><Left><Left>",
