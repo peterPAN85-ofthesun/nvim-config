@@ -8,6 +8,9 @@ return {
   },
   config = function()
     require("nvim-tree").setup({
+      hijack_directories = {
+        enable = false, -- Désactive l'ouverture automatique pour les dossiers
+      },
       actions = {
         open_file = {
           window_picker = {
