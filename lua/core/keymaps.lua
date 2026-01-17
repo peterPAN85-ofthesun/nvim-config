@@ -37,26 +37,13 @@ keymap("t", "<ESC>", "<C-\\><C-n>", { desc = "Sort du terminal de commande" })
 -- Terminal externe dans le répertoire de config Neovim
 keymap("n", "<leader>T", function()
 	local nvim_config_dir = vim.fn.stdpath("config")
-	local terminal_cmd = vim.env.TERMINAL
 
-	-- Si $TERMINAL n'est pas défini, essayer de détecter le terminal parent
+	-- Utiliser $TERMINAL ou chercher un terminal disponible
+	local terminal_cmd = vim.env.TERMINAL or vim.env.TERM_PROGRAM
+
 	if not terminal_cmd then
-		-- Essayer de détecter le terminal en cours via les processus parents
-		local handle = io.popen("ps -o comm= -p $(ps -o ppid= -p $PPID 2>/dev/null | tr -d ' ') 2>/dev/null")
-		if handle then
-			local parent_process = handle:read("*l")
-			handle:close()
-			if parent_process then
-				-- Nettoyer le nom du processus (enlever le chemin)
-				terminal_cmd = parent_process:match("([^/]+)$")
-			end
-		end
-	end
-
-	-- Si toujours pas trouvé, chercher un terminal disponible
-	if not terminal_cmd or vim.fn.executable(terminal_cmd) == 0 then
-		local fallback_terminals = { "x-terminal-emulator", "gnome-terminal", "konsole", "xfce4-terminal", "alacritty", "kitty", "wezterm", "xterm" }
-		terminal_cmd = nil
+		-- Liste de terminaux par ordre de préférence (terminaux modernes en premier)
+		local fallback_terminals = { "alacritty", "wezterm", "kitty", "x-terminal-emulator", "gnome-terminal", "konsole", "xfce4-terminal", "xterm" }
 		for _, term in ipairs(fallback_terminals) do
 			if vim.fn.executable(term) == 1 then
 				terminal_cmd = term
@@ -70,18 +57,22 @@ keymap("n", "<leader>T", function()
 		return
 	end
 
-	-- Extraire le nom du programme (avant le premier espace) pour le test d'exécutabilité
+	-- Extraire le nom du programme (avant le premier espace)
 	local terminal_name = terminal_cmd:match("^(%S+)")
 
 	if vim.fn.executable(terminal_name) == 1 then
-		-- Découper la commande en arguments pour jobstart
+		-- Découper la commande en arguments
 		local cmd_parts = {}
 		for part in terminal_cmd:gmatch("%S+") do
 			table.insert(cmd_parts, part)
 		end
 
-		vim.fn.jobstart(cmd_parts, { cwd = nvim_config_dir, detach = true })
-		vim.notify("Opening " .. terminal_cmd .. " in " .. nvim_config_dir, vim.log.levels.INFO)
+		local job_id = vim.fn.jobstart(cmd_parts, { cwd = nvim_config_dir, detach = true })
+		if job_id > 0 then
+			vim.notify("Opening " .. terminal_cmd .. " in " .. nvim_config_dir, vim.log.levels.INFO)
+		else
+			vim.notify("Failed to start terminal: " .. terminal_cmd, vim.log.levels.ERROR)
+		end
 	else
 		vim.notify("Terminal not found: " .. terminal_name, vim.log.levels.ERROR)
 	end
