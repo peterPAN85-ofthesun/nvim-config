@@ -272,8 +272,8 @@ return {
 			capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
 		end
 
-		-- Omnisharp LSP (C# pour tous les projets, y compris Godot)
-		-- Activé manuellement via autocmd FileType ci-dessous
+		-- Omnisharp LSP (C# pour projets NON-Godot uniquement)
+		-- Pour les projets Godot, godotdev.nvim gère omnisharp automatiquement
 		vim.lsp.config("omnisharp", {
 			cmd = { vim.fn.stdpath("data") .. "/mason/bin/omnisharp", "--languageserver" },
 			root_markers = {
@@ -326,11 +326,10 @@ return {
 				local godot_root = util.root_pattern("project.godot")(ev.file)
 
 				if godot_root then
-					-- Projet Godot : configuration de l'indentation + activation d'omnisharp
+					-- Projet Godot : godotdev.nvim gère omnisharp, on configure juste l'indentation
 					vim.bo[ev.buf].tabstop = 4
 					vim.bo[ev.buf].shiftwidth = 4
 					vim.bo[ev.buf].expandtab = false
-					vim.lsp.enable("omnisharp")
 				else
 					-- Projet C# non-Godot : activer omnisharp manuellement
 					vim.lsp.enable("omnisharp")
