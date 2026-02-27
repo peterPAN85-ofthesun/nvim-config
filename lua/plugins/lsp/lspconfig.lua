@@ -272,17 +272,9 @@ return {
 			capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
 		end
 
-		-- Omnisharp LSP (C# pour tous les projets, y compris Godot)
-		-- Activé manuellement via autocmd FileType ci-dessous
+		-- Omnisharp LSP (C#, inclus projets Godot)
+		-- Le cmd par défaut de nvim-lspconfig inclut -z (crucial pour la résolution SDK .NET Core)
 		vim.lsp.config("omnisharp", {
-			cmd = { vim.fn.stdpath("data") .. "/mason/bin/omnisharp", "--languageserver" },
-			root_markers = {
-				"*.sln",
-				"*.csproj",
-				"omnisharp.json",
-				"function.json",
-				".git",
-			},
 			capabilities = capabilities,
 			settings = {
 				FormattingOptions = {
@@ -296,6 +288,7 @@ return {
 				},
 				MsBuild = {
 					LoadProjectsOnDemand = false,
+					UseBundledOnly = false,
 				},
 			},
 		})
