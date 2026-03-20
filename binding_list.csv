@@ -57,6 +57,10 @@ binding,function,mode,source,file",",Repeat last f/t/F/T in opposite direction,n
 <S-k>,Move selected text down,v,conf nvim,lua/core/keymaps.lua
 <S-k>,Move selected text down,x,conf nvim,lua/core/keymaps.lua
 <S-l>,Go to next buffer,n,conf nvim,lua/core/keymaps.lua
+<leader>4d,Compile & run current .c file with -g debug flag,n,conf nvim,lua/plugins/42norm.lua
+<leader>4f,Format 42 norm (c_formatter_42),n,conf nvim,lua/plugins/42norm.lua
+<leader>4r,Compile & run current .c file with 42 flags (-Wall -Wextra -Werror),n,conf nvim,lua/plugins/42norm.lua
+<leader>4t,Toggle 42 norm format-on-save,n,conf nvim,lua/plugins/42norm.lua
 <leader>?,Show buffer local keymaps with which-key,n,conf nvim,lua/plugins/whichkey.lua
 <leader>D,Show buffer diagnostics (Telescope),n,conf nvim,lua/plugins/lsp/lspconfig.lua
 <leader>F,Format buffer (LSP),n,conf nvim,lua/plugins/lsp/lspconfig.lua
@@ -89,6 +93,7 @@ binding,function,mode,source,file",",Repeat last f/t/F/T in opposite direction,n
 <leader>hs,Stage git hunk,n,conf nvim,lua/plugins/gitsigns.lua
 <leader>hs,Stage git hunk,v,conf nvim,lua/plugins/gitsigns.lua
 <leader>hu,Undo stage git hunk,n,conf nvim,lua/plugins/gitsigns.lua
+<leader>mf,Toggle format-on-save,n,conf nvim,lua/plugins/conform.lua
 <leader>mp,Format file or range (conform),n,conf nvim,lua/plugins/conform.lua
 <leader>mp,Format file or range (conform),v,conf nvim,lua/plugins/conform.lua
 <leader>nh,Clear search highlight,n,conf nvim,lua/core/keymaps.lua
@@ -96,7 +101,6 @@ binding,function,mode,source,file",",Repeat last f/t/F/T in opposite direction,n
 <leader>rs,Restart LSP,n,conf nvim,lua/plugins/lsp/lspconfig.lua
 <leader>s,Search and replace word under cursor (with word boundaries),n,conf nvim,lua/core/keymaps.lua
 <leader>t,Open terminal in horizontal split,n,conf nvim,lua/core/keymaps.lua
-<leader>x,Run Foo,n,conf nvim,CLAUDE.md
 <leader>xL,Toggle location list (Trouble),n,conf nvim,lua/plugins/trouble.lua
 <leader>xQ,Toggle quickfix list (Trouble),n,conf nvim,lua/plugins/trouble.lua
 <leader>xX,Toggle buffer diagnostics (Trouble),n,conf nvim,lua/plugins/trouble.lua
