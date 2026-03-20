@@ -58,6 +58,8 @@ binding,function,mode,source,file",",Repeat last f/t/F/T in opposite direction,n
 <S-k>,Move selected text down,x,conf nvim,lua/core/keymaps.lua
 <S-l>,Go to next buffer,n,conf nvim,lua/core/keymaps.lua
 <leader>4d,Compile & run current .c file with -g debug flag,n,conf nvim,lua/plugins/42norm.lua
+<leader>4dg,Compiler et lancer gdb sur le fichier courant,n,conf nvim,lua/core/keymaps.lua
+<leader>4dv,Compiler et lancer valgrind sur le fichier courant,n,conf nvim,lua/core/keymaps.lua
 <leader>4f,Format 42 norm (c_formatter_42),n,conf nvim,lua/plugins/42norm.lua
 <leader>4r,Compile & run current .c file with 42 flags (-Wall -Wextra -Werror),n,conf nvim,lua/plugins/42norm.lua
 <leader>4t,Toggle 42 norm format-on-save,n,conf nvim,lua/plugins/42norm.lua

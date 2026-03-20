@@ -90,3 +90,35 @@ end, { desc = "Find keybindings (search all bindings)" })
 
 -- Update bindings from git diff
 keymap("n", "<leader>bu", ":UpdateBindings<CR>", { desc = "Update binding_list.csv from git diff" })
+
+-- Debug / Memory check pour C/C++ (sans CMake)
+local function compile_and_run(tool)
+	local file = vim.fn.expand("%:p")
+	local ext = vim.fn.expand("%:e")
+	local compiler = ext == "c" and "gcc" or "g++"
+	local binary = vim.fn.expand("%:p:r")
+	local tool_cmd = tool == "valgrind"
+		and "valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes"
+		or tool
+	local base = string.format('%s -g -o "%s" "%s" && %s "%s"', compiler, binary, file, tool_cmd, binary)
+	local shell_cmd = tool == "valgrind"
+		and base .. '; echo; read -n 1 -s -r -p "Appuyez sur une touche pour fermer..."'
+		or base
+	vim.cmd("sp enew")
+	local bufnr = vim.api.nvim_get_current_buf()
+	vim.fn.termopen({ "bash", "-c", shell_cmd }, {
+		on_exit = function()
+			vim.schedule(function()
+				if vim.api.nvim_buf_is_valid(bufnr) then
+					vim.api.nvim_buf_delete(bufnr, { force = true })
+				end
+			end)
+		end,
+	})
+	vim.cmd("startinsert")
+end
+
+keymap("n", "<leader>4dg", function() compile_and_run("gdb") end,
+	{ desc = "Compiler et lancer gdb sur le fichier courant" })
+keymap("n", "<leader>4dv", function() compile_and_run("valgrind") end,
+	{ desc = "Compiler et lancer valgrind sur le fichier courant" })
