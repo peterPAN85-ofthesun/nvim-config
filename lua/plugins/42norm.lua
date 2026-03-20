@@ -100,7 +100,36 @@ for line in lines:
         flush(block, out)
         out.append(line)
 flush(block, out)
-sys.stdout.write(''.join(out))
+
+def fix_comma_spacing(line):
+    result = []
+    i = 0
+    in_string = None
+    while i < len(line):
+        c = line[i]
+        if in_string:
+            result.append(c)
+            if c == '\\':
+                i += 1
+                if i < len(line):
+                    result.append(line[i])
+            elif c == in_string:
+                in_string = None
+        else:
+            if c in ('"', "'"):
+                in_string = c
+                result.append(c)
+            elif c == '/' and i + 1 < len(line) and line[i + 1] == '/':
+                result.append(line[i:])
+                break
+            elif c == ',' and i + 1 < len(line) and line[i + 1] not in (' ', '\n', '\r'):
+                result.append(', ')
+            else:
+                result.append(c)
+        i += 1
+    return ''.join(result)
+
+sys.stdout.write(''.join(fix_comma_spacing(line) for line in out))
 ]=]
     conform.formatters.norm42_align = {
       command = "python3",
