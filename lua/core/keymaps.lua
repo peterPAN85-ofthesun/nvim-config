@@ -31,7 +31,21 @@ keymap("n", "<S-l>", ":bnext<CR>", opts)
 keymap("n", "<S-h>", ":bprevious<CR>", opts)
 
 -- Terminal
-keymap("n", "<leader>t", ":sp term://" .. (vim.env.SHELL or "bash") .. "<CR>", { desc = "Affiche le terminal de commande" })
+keymap("n", "<leader>t", function()
+	vim.cmd("sp")
+	local bufnr = vim.api.nvim_create_buf(false, true)
+	vim.api.nvim_set_current_buf(bufnr)
+	vim.fn.termopen(vim.env.SHELL or "bash", {
+		on_exit = function()
+			vim.schedule(function()
+				if vim.api.nvim_buf_is_valid(bufnr) then
+					vim.api.nvim_buf_delete(bufnr, { force = true })
+				end
+			end)
+		end,
+	})
+	vim.cmd("startinsert")
+end, { desc = "Affiche le terminal de commande" })
 keymap("t", "<ESC>", "<C-\\><C-n>", { desc = "Sort du terminal de commande" })
 
 -- Terminal externe dans le répertoire de config Neovim
