@@ -9,6 +9,20 @@ return {
     vim.g.norm42_active = false -- 42 format mode OFF by default
   end,
   config = function()
+    -- Auto-install c_formatter_42 if not found
+    if vim.fn.executable("c_formatter_42") == 0 then
+      vim.notify("[42 Norm] c_formatter_42 not found, installing via pip...", vim.log.levels.INFO)
+      vim.fn.jobstart({ "pip", "install", "c-formatter-42" }, {
+        on_exit = function(_, code)
+          if code == 0 then
+            vim.notify("[42 Norm] c_formatter_42 installed successfully", vim.log.levels.INFO)
+          else
+            vim.notify("[42 Norm] Failed to install c_formatter_42 (exit code: " .. code .. ")", vim.log.levels.WARN)
+          end
+        end,
+      })
+    end
+
     local conform = require("conform")
 
     -- Pre-processor: converts 2+ spaces between type and varname to tabs (ceil(n/4))
