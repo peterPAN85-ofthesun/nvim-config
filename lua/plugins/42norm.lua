@@ -11,16 +11,20 @@ return {
   config = function()
     -- Auto-install c_formatter_42 if not found
     if vim.fn.executable("c_formatter_42") == 0 then
-      vim.notify("[42 Norm] c_formatter_42 not found, installing via pip...", vim.log.levels.INFO)
-      vim.fn.jobstart({ "pip", "install", "c-formatter-42" }, {
-        on_exit = function(_, code)
-          if code == 0 then
-            vim.notify("[42 Norm] c_formatter_42 installed successfully", vim.log.levels.INFO)
-          else
-            vim.notify("[42 Norm] Failed to install c_formatter_42 (exit code: " .. code .. ")", vim.log.levels.WARN)
-          end
-        end,
-      })
+      if vim.fn.executable("python3") == 1 then
+        vim.notify("[42 Norm] c_formatter_42 not found, installing via pip...", vim.log.levels.INFO)
+        vim.fn.jobstart({ "python3", "-m", "pip", "install", "--user", "c-formatter-42" }, {
+          on_exit = function(_, code)
+            if code == 0 then
+              vim.notify("[42 Norm] c_formatter_42 installed successfully", vim.log.levels.INFO)
+            else
+              vim.notify("[42 Norm] Failed to install c_formatter_42 (exit code: " .. code .. ")", vim.log.levels.WARN)
+            end
+          end,
+        })
+      else
+        vim.notify("[42 Norm] c_formatter_42 not found. Install with: pip install c-formatter-42", vim.log.levels.WARN)
+      end
     end
 
     local conform = require("conform")
