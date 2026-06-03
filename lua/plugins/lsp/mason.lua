@@ -10,12 +10,17 @@ return {
 		-- import de mason-lspconfig
 		local mason_lspconfig = require("mason-lspconfig")
 
-		-- Ajoute le chemin bin de Mason au PATH pour que godotdev.nvim trouve omnisharp
+		-- Ajoute le chemin bin de Mason au PATH (netcoredbg pour le debug C# de godotdev.nvim, etc.)
 		local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
 		vim.env.PATH = mason_bin .. ":" .. vim.env.PATH
 
 		-- Active mason et personnalise les icônes
 		mason.setup({
+			-- Le registre communautaire fournit "roslyn" (LSP C#) et "rzls", absents du registre par défaut.
+			registries = {
+				"github:mason-org/mason-registry",
+				"github:Crashdummyy/mason-registry",
+			},
 			ui = {
 				icons = {
 					package_installed = "✓",
@@ -45,8 +50,31 @@ return {
 				"ts_ls",
 				"yamlls",
 				"clangd",
-				"omnisharp", -- C# pour Godot
+			},
+			-- roslyn.nvim démarre lui-même le serveur C# : on empêche mason-lspconfig
+			-- d'activer automatiquement un éventuel omnisharp résiduel (incompatible avec Neovim).
+			automatic_enable = {
+				exclude = { "omnisharp" },
 			},
 		})
+
+		-- Paquets non gérés par mason-lspconfig, installés directement via le registre Mason :
+		--   - roslyn         : LSP C# (inclus projets Godot), détecté ensuite par roslyn.nvim
+		--   - tree-sitter-cli: requis par nvim-treesitter (branche main) pour compiler les parsers
+		-- mason/bin est déjà ajouté au PATH plus haut, donc le binaire "tree-sitter" devient disponible.
+		local registry = require("mason-registry")
+		local function ensure_tools()
+			for _, name in ipairs({ "roslyn", "tree-sitter-cli" }) do
+				local ok, pkg = pcall(registry.get_package, name)
+				if ok and not pkg:is_installed() then
+					pkg:install()
+				end
+			end
+		end
+		if registry.refresh then
+			registry.refresh(ensure_tools)
+		else
+			ensure_tools()
+		end
 	end,
 }

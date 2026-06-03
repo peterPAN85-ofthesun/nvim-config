@@ -272,23 +272,17 @@ return {
 			capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
 		end
 
-		-- Omnisharp LSP (C#, inclus projets Godot)
-		-- Le cmd par défaut de nvim-lspconfig inclut -z (crucial pour la résolution SDK .NET Core)
-		vim.lsp.config("omnisharp", {
+		-- Roslyn LSP (C#, inclus projets Godot) — démarrage géré par roslyn.nvim
+		-- Remplace omnisharp, incompatible avec Neovim (erreur INVALID_SERVER_MESSAGE : vim.NIL)
+		vim.lsp.config("roslyn", {
 			capabilities = capabilities,
 			settings = {
-				FormattingOptions = {
-					EnableEditorConfigSupport = true,
-					OrganizeImports = true,
+				["csharp|inlay_hints"] = {
+					csharp_enable_inlay_hints_for_implicit_object_creation = true,
+					csharp_enable_inlay_hints_for_implicit_variable_types = true,
 				},
-				RoslynExtensionsOptions = {
-					EnableAnalyzersSupport = true,
-					EnableImportCompletion = true,
-					EnableDecompilationSupport = true,
-				},
-				MsBuild = {
-					LoadProjectsOnDemand = false,
-					UseBundledOnly = false,
+				["csharp|code_lens"] = {
+					dotnet_enable_references_code_lens = true,
 				},
 			},
 		})
@@ -312,21 +306,15 @@ return {
 			end,
 		})
 
+		-- C# : indentation pour les projets Godot.
+		-- Le serveur LSP roslyn est démarré automatiquement par roslyn.nvim (cf. plugins/lsp/roslyn.lua).
 		vim.api.nvim_create_autocmd("FileType", {
 			pattern = "cs",
 			callback = function(ev)
-				-- Vérifier si c'est un projet Godot
-				local godot_root = util.root_pattern("project.godot")(ev.file)
-
-				if godot_root then
-					-- Projet Godot : configuration de l'indentation + activation d'omnisharp
+				if util.root_pattern("project.godot")(ev.file) then
 					vim.bo[ev.buf].tabstop = 4
 					vim.bo[ev.buf].shiftwidth = 4
 					vim.bo[ev.buf].expandtab = false
-					vim.lsp.enable("omnisharp")
-				else
-					-- Projet C# non-Godot : activer omnisharp manuellement
-					vim.lsp.enable("omnisharp")
 				end
 			end,
 		})
