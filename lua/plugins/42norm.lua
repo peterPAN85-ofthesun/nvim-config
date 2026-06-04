@@ -9,21 +9,31 @@ return {
     vim.g.norm42_active = false -- 42 format mode OFF by default
   end,
   config = function()
-    -- Auto-install c_formatter_42 if not found
-    if vim.fn.executable("c_formatter_42") == 0 then
+    -- Dedicated venv for c_formatter_42 (system pip is externally-managed/broken
+    -- on Arch and similar distros, so we never touch the global Python env).
+    local c42_venv = vim.fn.expand("~/.local/share/c_formatter_42_venv")
+    local c42_bin = c42_venv .. "/bin/c_formatter_42"
+
+    -- Auto-install c_formatter_42 into the venv if not found
+    if vim.fn.executable("c_formatter_42") == 0 and vim.fn.executable(c42_bin) == 0 then
       if vim.fn.executable("python3") == 1 then
-        vim.notify("[42 Norm] c_formatter_42 not found, installing via pip...", vim.log.levels.INFO)
-        vim.fn.jobstart({ "python3", "-m", "pip", "install", "--user", "c-formatter-42" }, {
+        vim.notify("[42 Norm] c_formatter_42 not found, installing in dedicated venv...", vim.log.levels.INFO)
+        local install_cmd = string.format(
+          'python3 -m venv %q && %q install -q --upgrade pip c-formatter-42 '
+            .. '&& mkdir -p ~/.local/bin && ln -sf %q ~/.local/bin/c_formatter_42',
+          c42_venv, c42_venv .. "/bin/pip", c42_bin
+        )
+        vim.fn.jobstart({ "sh", "-c", install_cmd }, {
           on_exit = function(_, code)
             if code == 0 then
-              vim.notify("[42 Norm] c_formatter_42 installed successfully", vim.log.levels.INFO)
+              vim.notify("[42 Norm] c_formatter_42 installed successfully (~/.local/bin)", vim.log.levels.INFO)
             else
               vim.notify("[42 Norm] Failed to install c_formatter_42 (exit code: " .. code .. ")", vim.log.levels.WARN)
             end
           end,
         })
       else
-        vim.notify("[42 Norm] c_formatter_42 not found. Install with: pip install c-formatter-42", vim.log.levels.WARN)
+        vim.notify("[42 Norm] c_formatter_42 not found and python3 is missing. Install python first.", vim.log.levels.WARN)
       end
     end
 
@@ -155,9 +165,9 @@ sys.stdout.write(''.join(fix_comma_spacing(line) for line in out))
       stdin = true,
     }
 
-    -- Register c_formatter_42
+    -- Register c_formatter_42 (prefer the venv binary, fall back to PATH)
     conform.formatters.c_formatter_42 = {
-      command = "c_formatter_42",
+      command = vim.fn.executable(c42_bin) == 1 and c42_bin or "c_formatter_42",
       stdin = true,
     }
 
