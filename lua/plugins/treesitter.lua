@@ -33,12 +33,20 @@ return {
 
 		-- Activer highlighting + indentation treesitter dès qu'un parser est disponible pour le filetype
 		vim.api.nvim_create_autocmd("FileType", {
-			callback = function()
+			callback = function(args)
 				-- vim.treesitter.start() échoue si aucun parser n'existe pour ce filetype : on protège l'appel
 				if not pcall(vim.treesitter.start) then
 					return
 				end
-				vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+				-- N'imposer l'indentexpr de treesitter QUE si une requête `indents`
+				-- existe pour ce langage. Sinon (ex : C# / c_sharp, Java), treesitter
+				-- ne sait pas indenter et renverrait "rien" : on écraserait alors
+				-- l'indentexpr natif de Neovim (indent/cs.vim -> GetCSIndent, etc.),
+				-- qui lui indente correctement. On le laisse donc en place.
+				local lang = vim.treesitter.language.get_lang(vim.bo[args.buf].filetype)
+				if lang and vim.treesitter.query.get(lang, "indents") then
+					vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+				end
 			end,
 		})
 	end,

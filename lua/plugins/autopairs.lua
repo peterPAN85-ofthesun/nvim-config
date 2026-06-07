@@ -11,6 +11,11 @@ return {
 		-- configure autopairs
 		autopairs.setup({
 			check_ts = true, -- enable treesitter
+			-- On NE laisse PAS autopairs mapper <CR> : c'est nvim-cmp qui possède la
+			-- touche (voir nvim-cmp.lua). Sinon, selon l'ordre de chargement des deux
+			-- plugins (tous deux sur InsertEnter), l'un écrase le <CR> de l'autre, ce
+			-- qui casse soit la validation des complétions, soit l'expansion des {}.
+			map_cr = false,
 			disable_filetype = { "TelescopePrompt" },
 			ts_config = {
 				lua = { "string" },     -- don't add pairs in lua string treesitter nodes

@@ -43,7 +43,35 @@ return {
         ["<C-f>"] = cmp.mapping.scroll_docs(1),
         ["<C-Space>"] = cmp.mapping.complete(),
         ["<C-e>"] = cmp.mapping.abort(),
-        ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accepte la sélection courante. Mettre à `false` pour ne confirmer que les items explicitement sélectionnés
+        -- <CR> : unique propriétaire de la touche Entrée en mode insertion
+        -- (voir autopairs.lua, map_cr = false).
+        --   * menu de complétion ouvert -> valide la sélection courante
+        --     (mettre `select = false` pour ne valider QUE les items que tu as
+        --     explicitement choisis avec <C-j>/<C-k>) ;
+        --   * curseur entre une paire ouvrante/fermante ({}, (), []) -> déplie un
+        --     bloc et place le curseur sur une ligne indentée au bon niveau ;
+        --   * sinon -> saut de ligne normal (l'indentation suit indentexpr).
+        ["<CR>"] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            cmp.confirm({ select = true })
+            return
+          end
+          local close = { ["{"] = "}", ["("] = ")", ["["] = "]" }
+          local line = vim.api.nvim_get_current_line()
+          local col = vim.api.nvim_win_get_cursor(0)[2] -- octets avant le curseur
+          local before = line:sub(col, col)
+          local after = line:sub(col + 1, col + 1)
+          if close[before] and close[before] == after then
+            -- {|}  ->  { \n <tab>| \n }
+            -- <CR> coupe la ligne, <Esc> revient en normal sur la fermante,
+            -- O ouvre une ligne au-dessus : indentexpr place le curseur au bon
+            -- niveau d'indentation (tab) entre les deux accolades.
+            vim.api.nvim_feedkeys(
+              vim.api.nvim_replace_termcodes("<CR><Esc>O", true, false, true), "n", false)
+          else
+            fallback()
+          end
+        end, { "i" }),
       },
 
       -- sources pour l'autocompletion
