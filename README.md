@@ -1,5 +1,184 @@
-# Prerequis pour vim plug
+# Configuration Neovim
+
+Configuration Neovim basée sur **lazy.nvim**, pensée pour le développement
+C/C++, Python, Rust, GDScript (Godot), C# et le web (TS/JS/HTML/CSS/Svelte).
+
+L'objectif est qu'elle fonctionne sur une nouvelle machine **par simple
+`git clone`** : lazy.nvim, les plugins, les serveurs LSP (via Mason) et le
+formatter 42 (`c_formatter_42`) s'installent automatiquement au premier
+lancement. Il reste cependant quelques **dépendances système** à installer
+au préalable (voir ci-dessous).
+
+---
+
+## 1. Prérequis système (obligatoires)
+
+| Dépendance            | Pourquoi                                                                 |
+| --------------------- | ----------------------------------------------------------------------- |
+| **Neovim ≥ 0.12**     | La config utilise l'API moderne `vim.lsp.config()` et treesitter `main`.|
+| **git**               | Clone de la config, de lazy.nvim et des plugins.                        |
+| **curl**              | Téléchargements (plugins, registres Mason).                             |
+| **gcc / clang + make**| Compilation des parsers treesitter et de `telescope-fzf-native`.        |
+| **ripgrep** (`rg`)    | Recherche dans les fichiers (`<leader>fg` live grep de Telescope).      |
+| **fd** (`fd-find`)    | Recherche de fichiers rapide pour Telescope (recommandé).               |
+| **unzip**             | Décompression de certains paquets Mason.                                |
+
+### Installation des prérequis
+
+**Arch Linux**
 ```bash
-sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+sudo pacman -S neovim git curl base-devel ripgrep fd unzip
 ```
+
+**Debian / Ubuntu**
+```bash
+sudo apt install neovim git curl build-essential ripgrep fd-find unzip
+# Neovim des dépôts est souvent trop ancien : préférez l'AppImage ou le PPA
+# pour obtenir une version >= 0.12.
+```
+
+**macOS (Homebrew)**
+```bash
+brew install neovim git curl ripgrep fd
+```
+
+---
+
+## 2. Dépendances par langage (optionnelles)
+
+Mason installe **automatiquement au premier lancement** :
+
+- les **serveurs LSP** listés dans `mason-lspconfig` (`ensure_installed`) ;
+- les **formatters / outils** listés dans `mason-tool-installer`
+  (`prettier`, `stylua`, `elm-format`, `csharpier`, `gdtoolkit`, `roslyn`,
+  `tree-sitter-cli`).
+
+Tout ça est déclaré dans `lua/plugins/lsp/mason.lua` : **rien à installer à la
+main côté Neovim**. En revanche, ces serveurs et formatters ont besoin d'un
+**runtime système** présent (node, python, dotnet…). N'installez que ce qui
+correspond aux langages que vous utilisez.
+
+| Langage / outil | Runtime système requis                      | Outils auto-installés par Mason                 |
+| --------------- | ------------------------------------------- | ----------------------------------------------- |
+| Web (TS/JS/...) | **node + npm**                              | LSP `ts_ls`, `html`, `cssls`, `svelte`, `graphql`, formatter `prettier` |
+| Python          | **python3 + venv/pip**                      | LSP `pylsp`, `ruff` (LSP + formatter)           |
+| Rust            | **rustup** (`rustc`, `cargo`, `rustfmt`)    | LSP `rust_analyzer` (`rustfmt` vient de rustup) |
+| Lua             | —                                           | Formatter `stylua`                              |
+| C#              | **.NET SDK** (`dotnet`)                      | LSP `roslyn`, formatter `csharpier`             |
+| GDScript/Godot  | **python3** + **Godot Editor** (port 6005)  | `gdtoolkit` (`gdformat`/`gdlint`)               |
+| C/C++ (42)      | **python3** (venv auto)                      | `c_formatter_42` (venv dédié, hors Mason)       |
+| Markdown/images | **ImageMagick + luarocks**, terminal **kitty**| Rendu d'images via `image.nvim`               |
+
+### Installation des runtimes
+
+```bash
+# Web (pour prettier + serveurs TS/HTML/CSS)
+sudo pacman -S nodejs npm          # ou: brew install node
+
+# Python
+sudo pacman -S python python-pip   # venv inclus
+
+# Rust (recommandé via rustup ; apporte rustfmt)
+sudo pacman -S rustup && rustup default stable
+
+# C# / Godot C#
+sudo pacman -S dotnet-sdk
+
+# image.nvim (rendu d'images dans le terminal kitty)
+sudo pacman -S imagemagick luarocks
+```
+
+> Seul **`rustfmt`** n'est pas géré par Mason : il est fourni par la toolchain
+> `rustup`. Tous les autres formatters s'installent tout seuls.
+
+---
+
+## 3. Installation de la config
+
+> ⚠️ **Sauvegardez d'abord toute config Neovim existante** si vous en avez une :
+> ```bash
+> mv ~/.config/nvim ~/.config/nvim.bak
+> mv ~/.local/share/nvim ~/.local/share/nvim.bak   # données/plugins
+> ```
+
+Clonez ce dépôt dans `~/.config/nvim` :
+
+```bash
+git clone <URL_DU_DEPOT> ~/.config/nvim
+```
+
+Lancez Neovim :
+
+```bash
+nvim
+```
+
+Au premier démarrage, automatiquement :
+
+1. **lazy.nvim** se clone tout seul (`lua/config/lazy.lua`).
+2. Tous les plugins sont téléchargés et installés.
+3. **Mason** installe les serveurs LSP (`clangd`, `lua_ls`, `pylsp`, `ruff`,
+   `rust_analyzer`, `ts_ls`, `html`, `cssls`…) **et** les formatters/outils
+   (`prettier`, `stylua`, `csharpier`, `gdtoolkit`, `roslyn`, `tree-sitter-cli`).
+4. **Treesitter** compile les parsers (C, C++, Lua, Python, Rust, GDScript, C#…).
+5. **`c_formatter_42`** s'installe dans un venv dédié
+   (`~/.local/share/c_formatter_42_venv`) la première fois qu'un `.c`/`.h` est ouvert.
+
+Laissez les installations se terminer (suivez la progression avec `:Lazy` et
+`:Mason`), puis **redémarrez Neovim**.
+
+### Vérification
+
+```vim
+:checkhealth      " diagnostic global de Neovim
+:Lazy             " état des plugins
+:Mason            " état des serveurs LSP / outils
+:checkhealth nvim-treesitter
+```
+
+---
+
+## 4. Notes spécifiques
+
+### Godot / GDScript
+Le LSP GDScript se connecte à l'éditeur Godot via TCP sur `127.0.0.1:6005`.
+Il faut donc **lancer Godot Editor** sur le projet (présence de `project.godot`)
+pour avoir l'autocomplétion. Voir `lua/plugins/godotdev.lua` et
+`lua/plugins/lsp/lspconfig.lua`.
+
+### Norme 42 (C/C++)
+- Le header 42 utilise `$USER` ; définissez si besoin `vim.g.user42` /
+  `vim.g.mail42` (voir `lua/plugins/42norm.lua`).
+- `<leader>4t` (ou `:Norm42Toggle`) active le format-on-save à la norme 42.
+- `c_formatter_42` est installé automatiquement dans un venv dédié pour ne pas
+  toucher au Python système (cassé/externally-managed sur Arch & co).
+
+### image.nvim
+Le rendu d'images n'est actif que dans un terminal compatible (**kitty** par
+défaut) et nécessite ImageMagick + le rock `magick` (via luarocks). En dehors,
+le plugin se désactive silencieusement (pas d'erreur).
+
+---
+
+## 5. Reproductibilité des versions
+
+Le fichier `lazy-lock.json` est **versionné** (suivi par git) : il fige le
+commit exact de chaque plugin. Sur une nouvelle machine, après le clone,
+lancez `:Lazy restore` pour réinstaller **exactement les mêmes versions** que
+sur la machine d'origine.
+
+Pour mettre les plugins à jour : `:Lazy update`, puis committez le
+`lazy-lock.json` modifié. Vos mises à jour restent ainsi volontaires et tracées.
+
+---
+
+## 6. Dépannage rapide
+
+| Symptôme                                   | Piste                                                            |
+| ------------------------------------------ | --------------------------------------------------------------- |
+| Erreurs treesitter au démarrage            | `gcc`/`make` manquant, ou Neovim < 0.12. Relancez `:TSUpdate`.  |
+| `live grep` / `find files` ne marche pas   | Installez `ripgrep` et `fd`.                                    |
+| LSP non démarré                            | `:Mason` pour vérifier l'install ; runtime du langage présent ? |
+| Formatter inactif (prettier, csharpier…)   | Runtime manquant (node/dotnet…). Vérifiez l'install via `:Mason`.|
+| C# / Godot C# sans complétion              | Installez le **.NET SDK**.                                      |
+| Pas de rendu d'images                      | Terminal kitty + ImageMagick + luarocks requis.                |

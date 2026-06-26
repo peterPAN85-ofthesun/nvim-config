@@ -2,6 +2,8 @@ return {
 	"mason-org/mason.nvim",
 	dependencies = {
 		"mason-org/mason-lspconfig.nvim",
+		-- Installe automatiquement les outils non-LSP (formatters, linters, parsers)
+		"WhoIsSethDaniel/mason-tool-installer.nvim",
 	},
 	config = function()
 		-- import de mason
@@ -9,6 +11,9 @@ return {
 
 		-- import de mason-lspconfig
 		local mason_lspconfig = require("mason-lspconfig")
+
+		-- import de mason-tool-installer (formatters, linters, etc.)
+		local mason_tool_installer = require("mason-tool-installer")
 
 		-- Ajoute le chemin bin de Mason au PATH (netcoredbg pour le debug C# de godotdev.nvim, etc.)
 		local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
@@ -58,23 +63,23 @@ return {
 			},
 		})
 
-		-- Paquets non gérés par mason-lspconfig, installés directement via le registre Mason :
-		--   - roslyn         : LSP C# (inclus projets Godot), détecté ensuite par roslyn.nvim
-		--   - tree-sitter-cli: requis par nvim-treesitter (branche main) pour compiler les parsers
-		-- mason/bin est déjà ajouté au PATH plus haut, donc le binaire "tree-sitter" devient disponible.
-		local registry = require("mason-registry")
-		local function ensure_tools()
-			for _, name in ipairs({ "roslyn", "tree-sitter-cli" }) do
-				local ok, pkg = pcall(registry.get_package, name)
-				if ok and not pkg:is_installed() then
-					pkg:install()
-				end
-			end
-		end
-		if registry.refresh then
-			registry.refresh(ensure_tools)
-		else
-			ensure_tools()
-		end
+		-- Outils non gérés par mason-lspconfig (formatters, linters, parsers).
+		-- mason-tool-installer les installe automatiquement au démarrage.
+		-- mason/bin est déjà ajouté au PATH plus haut, donc leurs binaires deviennent disponibles.
+		mason_tool_installer.setup({
+			ensure_installed = {
+				-- Formatters (cf. lua/plugins/conform.lua)
+				"prettier", -- css, html, json, markdown, yaml, js/ts, svelte, graphql
+				"stylua", -- lua
+				"elm-format", -- elm
+				"csharpier", -- C# (projets Godot)
+				"gdtoolkit", -- fournit gdformat (+ gdlint) pour GDScript
+				-- Serveurs / outils divers
+				"roslyn", -- LSP C# (registre communautaire), démarré ensuite par roslyn.nvim
+				"tree-sitter-cli", -- requis par nvim-treesitter (branche main) pour compiler les parsers
+			},
+			-- Lance l'installation automatiquement au démarrage de Neovim
+			run_on_start = true,
+		})
 	end,
 }

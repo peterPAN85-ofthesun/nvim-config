@@ -1,1 +1,3 @@
-lazy-lock.json
+# lazy-lock.json est VOLONTAIREMENT versionné (suivi par git) pour figer les
+# versions des plugins et garantir une config reproductible sur une autre machine.
+# Sur un nouveau PC : `:Lazy restore` réinstalle exactement ces versions.
