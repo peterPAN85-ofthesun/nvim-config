@@ -182,3 +182,78 @@ Pour mettre les plugins à jour : `:Lazy update`, puis committez le
 | Formatter inactif (prettier, csharpier…)   | Runtime manquant (node/dotnet…). Vérifiez l'install via `:Mason`.|
 | C# / Godot C# sans complétion              | Installez le **.NET SDK**.                                      |
 | Pas de rendu d'images                      | Terminal kitty + ImageMagick + luarocks requis.                |
+
+---
+
+## 7. Le formateur 42
+
+### À quoi ça sert
+
+Le formateur 42 met automatiquement un fichier **C** en conformité avec le
+style de codage de l'école 42 (la « Norm »), ce qui évite de repositionner à la
+main l'indentation, les alignements et les espaces. Il repose sur deux briques :
+
+- **`c_formatter_42`** : le formateur de fond ;
+- **`norm42_align`** : un pré-processeur propre à cette config qui affine
+  certains détails (alignement des déclarations, accolades) avant de passer la
+  main à `c_formatter_42`.
+
+### Principales fonctionnalités
+
+- Réindentation avec **tabulations** à la bonne profondeur ;
+- **Alignement** des déclarations de variables (type / nom) sur des colonnes ;
+- **Accolades style Allman** (accolade ouvrante sur sa propre ligne) ;
+- **Espacement** normalisé (par ex. une espace après les virgules) ;
+- **Mise à jour automatique** de la date / du login dans le header 42 à la
+  sauvegarde (si un header est déjà présent) ;
+- Activable à la demande : `<leader>4t` (toggle format-on-save),
+  `<leader>4f` (formater maintenant), `<leader>4r` / `<leader>4d`
+  (compiler & exécuter avec les flags 42).
+
+### Ce que le formateur 42 n'est PAS
+
+Pour éviter tout malentendu sur la finalité de l'outil :
+
+- **Ce n'est pas un générateur de code.** Il ne rédige ni logique, ni
+  algorithme, ni solution : il **ré-agence un code existant**, sans jamais en
+  modifier le comportement.
+- **Ce n'est pas un substitut à l'apprentissage de la Norm.** La compréhension
+  et la maîtrise des règles restent indispensables ; l'outil n'est qu'un confort
+  de mise en forme.
+- **Ce n'est pas un moyen de « faire passer » un travail.** La forme change, le
+  fond reste celui de l'auteur — le code doit demeurer une œuvre personnelle.
+
+---
+
+## 8. Crédits & remerciements
+
+Cette configuration n'est qu'un assemblage : le mérite revient aux auteurs des
+outils ci-dessous. Merci à eux. (Identifiants = comptes GitHub.)
+
+### Spécifique 42
+
+| Outil | Auteur | Rôle |
+| ----- | ------ | ---- |
+| **42header** | **[`42paris`](https://github.com/42paris/42header)** (organisation officielle de l'école 42) | Header 42 (`<F1>`, mise à jour auto) |
+| **c_formatter_42** | **[`peterPAN85-ofthesun`](https://github.com/peterPAN85-ofthesun)** (paquet PyPI `c-formatter-42`) | Formateur C à la Norm 42 |
+| **Intégration 42-norm** (`norm42_align` + workflow) | **[`peterPAN85-ofthesun`](https://github.com/peterPAN85-ofthesun)** | Pré-processeur d'alignement & raccourcis (cf. `lua/plugins/42norm.lua`) |
+
+### Plugins Neovim
+
+| Domaine | Plugins (auteur GitHub) |
+| ------- | ----------------------- |
+| Gestionnaire | lazy.nvim (`folke`) |
+| LSP | nvim-lspconfig (`neovim`), mason.nvim & mason-lspconfig.nvim (`mason-org`), mason-tool-installer.nvim (`WhoIsSethDaniel`), clangd_extensions.nvim (`p00f`), roslyn.nvim (`seblyng`), lazydev.nvim (`folke`), nvim-lsp-file-operations (`antosha417`) |
+| Complétion | nvim-cmp & cmp-* (`hrsh7th`), LuaSnip (`L3MON4D3`), cmp_luasnip (`saadparwaiz1`), friendly-snippets (`rafamadriz`), lspkind.nvim (`onsails`) |
+| Formatage / Syntaxe | conform.nvim (`stevearc`), nvim-treesitter (`nvim-treesitter`) |
+| Navigation | telescope.nvim & telescope-fzf-native (`nvim-telescope`), plenary.nvim (`nvim-lua`), nvim-tree.lua & nvim-web-devicons (`nvim-tree`), nvim-window-picker (`s1n7ax`) |
+| Interface | cyberdream.nvim (`scottmckendry`), tokyonight.nvim (`folke`), lualine.nvim (`nvim-lualine`), bufferline.nvim (`akinsho`), alpha-nvim (`goolord`), noice.nvim & which-key.nvim & trouble.nvim & todo-comments.nvim (`folke`), nui.nvim (`MunifTanjim`), nvim-notify (`rcarriga`), indent-blankline.nvim (`lukas-reineke`), rainbow-delimiters.nvim (`hiphish`), satellite.nvim (`lewis6991`), profile.nvim (`Kurama622`), image.nvim (`3rd`) + magick (`leafo`), cord.nvim (`vyfor`) |
+| Édition | Comment.nvim (`numToStr`), nvim-autopairs (`windwp`), gitsigns.nvim (`lewis6991`) |
+| C / C++ | ouroboros (`jakemason`) |
+| Godot / Debug | godotdev.nvim (`Mathijs-Bakker`), nvim-dap (`mfussenegger`), nvim-dap-ui (`rcarriga`), nvim-nio (`nvim-neotest`) |
+
+### Outils en ligne de commande (LSP / formatters)
+
+clangd (`LLVM`), rust-analyzer (`rust-lang`), ruff (`astral-sh`),
+prettier (`prettier`), stylua (`JohnnyMorganz`), rustfmt (`rust-lang`),
+csharpier (`belav`), gdtoolkit / gdformat (`Scony`), tree-sitter (`tree-sitter`).
