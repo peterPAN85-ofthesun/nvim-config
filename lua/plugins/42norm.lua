@@ -1,47 +1,58 @@
 return {
-  -- 42 standard header (insert with <F1>, auto-update on save)
-  "42paris/42header",
-  lazy = false,
-  dependencies = { "stevearc/conform.nvim" },
-  init = function()
-    vim.g.user42 = vim.env.USER or "login"
-    vim.g.mail42 = (vim.env.USER or "login") .. "@student.42.fr"
-    vim.g.norm42_active = false -- 42 format mode OFF by default
-  end,
-  config = function()
-    -- Dedicated venv for c_formatter_42 (system pip is externally-managed/broken
-    -- on Arch and similar distros, so we never touch the global Python env).
-    local c42_venv = vim.fn.expand("~/.local/share/c_formatter_42_venv")
-    local c42_bin = c42_venv .. "/bin/c_formatter_42"
+	-- 42 standard header (insert with <F1>, auto-update on save)
+	"42paris/42header",
+	lazy = false,
+	dependencies = { "stevearc/conform.nvim" },
+	init = function()
+		vim.g.user42 = vim.env.USER or "login"
+		vim.g.mail42 = "gregoire.pineau@learner.42.tech"
+		vim.g.norm42_active = false -- 42 format mode OFF by default
+	end,
+	config = function()
+		-- Dedicated venv for c_formatter_42 (system pip is externally-managed/broken
+		-- on Arch and similar distros, so we never touch the global Python env).
+		local c42_venv = vim.fn.expand("~/.local/share/c_formatter_42_venv")
+		local c42_bin = c42_venv .. "/bin/c_formatter_42"
 
-    -- Auto-install c_formatter_42 into the venv if not found
-    if vim.fn.executable("c_formatter_42") == 0 and vim.fn.executable(c42_bin) == 0 then
-      if vim.fn.executable("python3") == 1 then
-        vim.notify("[42 Norm] c_formatter_42 not found, installing in dedicated venv...", vim.log.levels.INFO)
-        local install_cmd = string.format(
-          'python3 -m venv %q && %q install -q --upgrade pip c-formatter-42 '
-            .. '&& mkdir -p ~/.local/bin && ln -sf %q ~/.local/bin/c_formatter_42',
-          c42_venv, c42_venv .. "/bin/pip", c42_bin
-        )
-        vim.fn.jobstart({ "sh", "-c", install_cmd }, {
-          on_exit = function(_, code)
-            if code == 0 then
-              vim.notify("[42 Norm] c_formatter_42 installed successfully (~/.local/bin)", vim.log.levels.INFO)
-            else
-              vim.notify("[42 Norm] Failed to install c_formatter_42 (exit code: " .. code .. ")", vim.log.levels.WARN)
-            end
-          end,
-        })
-      else
-        vim.notify("[42 Norm] c_formatter_42 not found and python3 is missing. Install python first.", vim.log.levels.WARN)
-      end
-    end
+		-- Auto-install c_formatter_42 into the venv if not found
+		if vim.fn.executable("c_formatter_42") == 0 and vim.fn.executable(c42_bin) == 0 then
+			if vim.fn.executable("python3") == 1 then
+				vim.notify("[42 Norm] c_formatter_42 not found, installing in dedicated venv...", vim.log.levels.INFO)
+				local install_cmd = string.format(
+					"python3 -m venv %q && %q install -q --upgrade pip c-formatter-42 "
+						.. "&& mkdir -p ~/.local/bin && ln -sf %q ~/.local/bin/c_formatter_42",
+					c42_venv,
+					c42_venv .. "/bin/pip",
+					c42_bin
+				)
+				vim.fn.jobstart({ "sh", "-c", install_cmd }, {
+					on_exit = function(_, code)
+						if code == 0 then
+							vim.notify(
+								"[42 Norm] c_formatter_42 installed successfully (~/.local/bin)",
+								vim.log.levels.INFO
+							)
+						else
+							vim.notify(
+								"[42 Norm] Failed to install c_formatter_42 (exit code: " .. code .. ")",
+								vim.log.levels.WARN
+							)
+						end
+					end,
+				})
+			else
+				vim.notify(
+					"[42 Norm] c_formatter_42 not found and python3 is missing. Install python first.",
+					vim.log.levels.WARN
+				)
+			end
+		end
 
-    local conform = require("conform")
+		local conform = require("conform")
 
-    -- Pre-processor: converts 2+ spaces between type and varname to tabs (ceil(n/4))
-    -- Runs before c_formatter_42 so tabs are preserved by the norm formatter
-    local align_script = [=[
+		-- Pre-processor: converts 2+ spaces between type and varname to tabs (ceil(n/4))
+		-- Runs before c_formatter_42 so tabs are preserved by the norm formatter
+		local align_script = [=[
 import sys, re
 
 TAB_WIDTH = 4
@@ -159,81 +170,78 @@ def fix_comma_spacing(line):
 
 sys.stdout.write(''.join(fix_comma_spacing(line) for line in out))
 ]=]
-    conform.formatters.norm42_align = {
-      command = "python3",
-      args = { "-c", align_script },
-      stdin = true,
-    }
+		conform.formatters.norm42_align = {
+			command = "python3",
+			args = { "-c", align_script },
+			stdin = true,
+		}
 
-    -- Register c_formatter_42 (prefer the venv binary, fall back to PATH)
-    conform.formatters.c_formatter_42 = {
-      command = vim.fn.executable(c42_bin) == 1 and c42_bin or "c_formatter_42",
-      stdin = true,
-    }
+		-- Register c_formatter_42 (prefer the venv binary, fall back to PATH)
+		conform.formatters.c_formatter_42 = {
+			command = vim.fn.executable(c42_bin) == 1 and c42_bin or "c_formatter_42",
+			stdin = true,
+		}
 
-    -- Toggle 42 norm mode (controls format-on-save behavior for C/H files)
-    local function toggle_norm42()
-      vim.g.norm42_active = not vim.g.norm42_active
-      local state = vim.g.norm42_active and "ON  (save → c_formatter_42)" or "OFF (save → clangd)"
-      vim.notify("[42 Norm] Format mode: " .. state, vim.log.levels.INFO)
-    end
+		-- Toggle 42 norm mode (controls format-on-save behavior for C/H files)
+		local function toggle_norm42()
+			vim.g.norm42_active = not vim.g.norm42_active
+			local state = vim.g.norm42_active and "ON  (save → c_formatter_42)" or "OFF (save → clangd)"
+			vim.notify("[42 Norm] Format mode: " .. state, vim.log.levels.INFO)
+		end
 
-    vim.api.nvim_create_user_command("Norm42Toggle", toggle_norm42,
-      { desc = "Toggle 42 norm format-on-save mode" })
+		vim.api.nvim_create_user_command("Norm42Toggle", toggle_norm42, { desc = "Toggle 42 norm format-on-save mode" })
 
-    vim.keymap.set("n", "<leader>4t", toggle_norm42,
-      { desc = "Toggle 42 norm format-on-save" })
+		vim.keymap.set("n", "<leader>4t", toggle_norm42, { desc = "Toggle 42 norm format-on-save" })
 
-    -- :Norm42 / <leader>4f → always format manually with 42 norm
-    vim.api.nvim_create_user_command("Norm42", function()
-      conform.format({ formatters = { "c_formatter_42", "norm42_align" }, async = false, timeout_ms = 5000 })
-    end, { desc = "Format buffer with 42 norm (c_formatter_42)" })
+		-- :Norm42 / <leader>4f → always format manually with 42 norm
+		vim.api.nvim_create_user_command("Norm42", function()
+			conform.format({ formatters = { "c_formatter_42", "norm42_align" }, async = false, timeout_ms = 5000 })
+		end, { desc = "Format buffer with 42 norm (c_formatter_42)" })
 
-    vim.keymap.set("n", "<leader>4f", "<cmd>Norm42<CR>",
-      { desc = "Format 42 norm (c_formatter_42)" })
+		vim.keymap.set("n", "<leader>4f", "<cmd>Norm42<CR>", { desc = "Format 42 norm (c_formatter_42)" })
 
-    -- Compile and run current .c file in a terminal split
-    local function compile_and_run(flags)
-      local file = vim.fn.expand("%:p")
-      if vim.fn.expand("%:e") ~= "c" then
-        vim.notify("[42] Not a .c file", vim.log.levels.WARN)
-        return
-      end
-      vim.cmd("write")
-      local out = vim.fn.tempname()
-      local cmd = { "sh", "-c",
-        string.format("gcc %s '%s' -o '%s' && '%s'; echo \"[exit: $?]\"", flags, file, out, out)
-      }
-      vim.cmd("botright new")
-      vim.fn.termopen(cmd)
-      vim.cmd("startinsert")
-    end
+		-- Compile and run current .c file in a terminal split
+		local function compile_and_run(flags)
+			local file = vim.fn.expand("%:p")
+			if vim.fn.expand("%:e") ~= "c" then
+				vim.notify("[42] Not a .c file", vim.log.levels.WARN)
+				return
+			end
+			vim.cmd("write")
+			local out = vim.fn.tempname()
+			local cmd = {
+				"sh",
+				"-c",
+				string.format("gcc %s '%s' -o '%s' && '%s'; echo \"[exit: $?]\"", flags, file, out, out),
+			}
+			vim.cmd("botright new")
+			vim.fn.termopen(cmd)
+			vim.cmd("startinsert")
+		end
 
-    vim.api.nvim_create_user_command("Norm42Run", function()
-      compile_and_run("-Wall -Wextra -Werror")
-    end, { desc = "Compile .c (-Wall -Wextra -Werror) and run" })
+		vim.api.nvim_create_user_command("Norm42Run", function()
+			compile_and_run("-Wall -Wextra -Werror")
+		end, { desc = "Compile .c (-Wall -Wextra -Werror) and run" })
 
-    vim.api.nvim_create_user_command("Norm42Debug", function()
-      compile_and_run("-g")
-    end, { desc = "Compile .c (-g) and run" })
+		vim.api.nvim_create_user_command("Norm42Debug", function()
+			compile_and_run("-g")
+		end, { desc = "Compile .c (-g) and run" })
 
-    vim.keymap.set("n", "<leader>4r", "<cmd>Norm42Run<CR>",
-      { desc = "Compile & run (42 flags)" })
+		vim.keymap.set("n", "<leader>4r", "<cmd>Norm42Run<CR>", { desc = "Compile & run (42 flags)" })
 
-    vim.keymap.set("n", "<leader>4d", "<cmd>Norm42Debug<CR>",
-      { desc = "Compile & run (-g debug)" })
+		vim.keymap.set("n", "<leader>4d", "<cmd>Norm42Debug<CR>", { desc = "Compile & run (-g debug)" })
 
-    -- Auto-update header modification date/login on save (only if header already present)
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      pattern = { "*.c", "*.h" },
-      callback = function()
-        local first_line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1] or ""
-        if first_line:match("^/%* %*+%s*$") then
-          local cursor = vim.api.nvim_win_get_cursor(0)
-          vim.cmd("Stdheader")
-          vim.api.nvim_win_set_cursor(0, cursor)
-        end
-      end,
-    })
-  end,
+		-- Auto-update header modification date/login on save (only if header already present)
+		vim.api.nvim_create_autocmd("BufWritePre", {
+			pattern = { "*.c", "*.h" },
+			callback = function()
+				local first_line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1] or ""
+				if first_line:match("^/%* %*+%s*$") then
+					local cursor = vim.api.nvim_win_get_cursor(0)
+					vim.cmd("Stdheader")
+					vim.api.nvim_win_set_cursor(0, cursor)
+				end
+			end,
+		})
+	end,
 }
