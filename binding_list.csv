@@ -1,5 +1,4 @@
-binding,function,mode,source,file",",Repeat last f/t/F/T in opposite direction,n,vim,native#,Search word under cursor backward,n,vim,native$,Move to end of line,n,vim,native%,Jump to matching bracket/parenthesis,n,vim,native',Jump to mark (followed by letter),n,vim,native'',Jump back to previous position,n,vim,native
-*,Search word under cursor forward,n,vim,native
+binding,function,mode,source,file",",Repeat last f/t/F/T in opposite direction,n,vim,native#,Search word under cursor backward,n,vim,native$,Move to end of line,n,vim,native%,Jump to matching bracket/parenthesis,n,vim,native',Jump to mark (followed by letter),n,vim,native'',Jump back to previous position,n,vim,native*,Search word under cursor forward,n,vim,native
 .,Repeat last change,n,vim,native
 /,Search forward,n,vim,native
 0,Move to start of line,n,vim,native
@@ -22,10 +21,10 @@ binding,function,mode,source,file",",Repeat last f/t/F/T in opposite direction,n
 <C-f>,Scroll page down,n,vim,native
 <C-h>,Move cursor to left window,n,conf nvim,lua/core/keymaps.lua
 <C-i>,Jump to newer position in jump list,n,vim,native
-<C-j>,Move cursor to window below,n,conf nvim,lua/core/keymaps.lua
 <C-j>,Select next completion item,i,conf nvim,lua/plugins/nvim-cmp.lua
-<C-k>,Move cursor to window above,n,conf nvim,lua/core/keymaps.lua
+<C-j>,Move cursor to window below,n,conf nvim,lua/core/keymaps.lua
 <C-k>,Select previous completion item,i,conf nvim,lua/plugins/nvim-cmp.lua
+<C-k>,Move cursor to window above,n,conf nvim,lua/core/keymaps.lua
 <C-l>,Move cursor to right window,n,conf nvim,lua/core/keymaps.lua
 <C-o>,Jump to older position in jump list,n,vim,native
 <C-p>,Run CMake target,n,conf nvim,lua/plugins/cmake-tools.lua
@@ -52,8 +51,8 @@ binding,function,mode,source,file",",Repeat last f/t/F/T in opposite direction,n
 <F3>,Implement method from header to source (C/C++),n,conf nvim,lua/core/headertosource.lua
 <F4>,Switch between header and source files (C/C++),n,conf nvim,lua/core/keymaps.lua
 <S-h>,Go to previous buffer,n,conf nvim,lua/core/keymaps.lua
-<S-i>,Move selected text up,x,conf nvim,lua/core/keymaps.lua
 <S-i>,Move selected text up,v,conf nvim,lua/core/keymaps.lua
+<S-i>,Move selected text up,x,conf nvim,lua/core/keymaps.lua
 <S-k>,Move selected text down,v,conf nvim,lua/core/keymaps.lua
 <S-k>,Move selected text down,x,conf nvim,lua/core/keymaps.lua
 <S-l>,Go to next buffer,n,conf nvim,lua/core/keymaps.lua
@@ -83,6 +82,15 @@ binding,function,mode,source,file",",Repeat last f/t/F/T in opposite direction,n
 <leader>ff,Find files (Telescope),n,conf nvim,lua/plugins/telescope.lua
 <leader>fg,Live grep in files (Telescope),n,conf nvim,lua/plugins/telescope.lua
 <leader>fx,Grep word under cursor (Telescope),n,conf nvim,lua/plugins/telescope.lua
+<leader>g0,Conflict: choose none,n,conf nvim,lua/plugins/git-conflict.lua
+<leader>gH,Diffview history (repo),n,conf nvim,lua/plugins/diffview.lua
+<leader>gb,Conflict: choose both,n,conf nvim,lua/plugins/git-conflict.lua
+<leader>gd,Open Diffview (diff / merge conflicts),n,conf nvim,lua/plugins/diffview.lua
+<leader>gh,Diffview file history (current),n,conf nvim,lua/plugins/diffview.lua
+<leader>gl,Conflict: list in quickfix,n,conf nvim,lua/plugins/git-conflict.lua
+<leader>go,Conflict: choose ours,n,conf nvim,lua/plugins/git-conflict.lua
+<leader>gt,Conflict: choose theirs,n,conf nvim,lua/plugins/git-conflict.lua
+<leader>gx,Close Diffview,n,conf nvim,lua/plugins/diffview.lua
 <leader>hB,Toggle current line git blame,n,conf nvim,lua/plugins/gitsigns.lua
 <leader>hD,Show git diff against HEAD~,n,conf nvim,lua/plugins/gitsigns.lua
 <leader>hR,Reset buffer to HEAD,n,conf nvim,lua/plugins/gitsigns.lua
@@ -90,14 +98,14 @@ binding,function,mode,source,file",",Repeat last f/t/F/T in opposite direction,n
 <leader>hb,Show git blame for line,n,conf nvim,lua/plugins/gitsigns.lua
 <leader>hd,Show git diff,n,conf nvim,lua/plugins/gitsigns.lua
 <leader>hp,Preview git hunk,n,conf nvim,lua/plugins/gitsigns.lua
-<leader>hr,Reset git hunk,v,conf nvim,lua/plugins/gitsigns.lua
 <leader>hr,Reset git hunk,n,conf nvim,lua/plugins/gitsigns.lua
-<leader>hs,Stage git hunk,n,conf nvim,lua/plugins/gitsigns.lua
+<leader>hr,Reset git hunk,v,conf nvim,lua/plugins/gitsigns.lua
 <leader>hs,Stage git hunk,v,conf nvim,lua/plugins/gitsigns.lua
+<leader>hs,Stage git hunk,n,conf nvim,lua/plugins/gitsigns.lua
 <leader>hu,Undo stage git hunk,n,conf nvim,lua/plugins/gitsigns.lua
 <leader>mf,Toggle format-on-save,n,conf nvim,lua/plugins/conform.lua
-<leader>mp,Format file or range (conform),n,conf nvim,lua/plugins/conform.lua
 <leader>mp,Format file or range (conform),v,conf nvim,lua/plugins/conform.lua
+<leader>mp,Format file or range (conform),n,conf nvim,lua/plugins/conform.lua
 <leader>nh,Clear search highlight,n,conf nvim,lua/core/keymaps.lua
 <leader>rn,Rename symbol (LSP),n,conf nvim,lua/plugins/lsp/lspconfig.lua
 <leader>rs,Restart LSP,n,conf nvim,lua/plugins/lsp/lspconfig.lua
@@ -136,9 +144,11 @@ ZZ,Write and quit,n,vim,native
 [d,Go to previous diagnostic,n,conf nvim,lua/plugins/lsp/lspconfig.lua
 [h,Go to previous git hunk,n,conf nvim,lua/plugins/gitsigns.lua
 [t,Go to previous todo comment,n,conf nvim,lua/plugins/todo-comments.lua
+[x,Prev git conflict,n,conf nvim,lua/plugins/git-conflict.lua
 ]d,Go to next diagnostic,n,conf nvim,lua/plugins/lsp/lspconfig.lua
 ]h,Go to next git hunk,n,conf nvim,lua/plugins/gitsigns.lua
 ]t,Go to next todo comment,n,conf nvim,lua/plugins/todo-comments.lua
+]x,Next git conflict,n,conf nvim,lua/plugins/git-conflict.lua
 ^,Move to first non-blank character of line,n,vim,native
 `,'Jump to exact mark position (followed by letter),n,vim,native
 a,Enter insert mode after cursor,n,vim,native
@@ -166,8 +176,8 @@ gt,Show LSP type definitions (Telescope),n,conf nvim,lua/plugins/lsp/lspconfig.l
 gu,Make lowercase (operator),n,vim,native
 h,Move cursor left,n,vim,native
 i,Enter insert mode before cursor,n,vim,native
-ih,Select git hunk (text object),x,conf nvim,lua/plugins/gitsigns.lua
 ih,Select git hunk (text object),o,conf nvim,lua/plugins/gitsigns.lua
+ih,Select git hunk (text object),x,conf nvim,lua/plugins/gitsigns.lua
 j,Move cursor down,n,vim,native
 k,Move cursor up,n,vim,native
 l,Move cursor right,n,vim,native
