@@ -14,11 +14,14 @@ return {
         section_separators = { left = "", right = "" },
         disabled_filetypes = {
           statusline = {},
-          winbar = {},
+          -- Pas de winbar sur les buffers utilitaires (arbo, dashboard…)
+          winbar = { "alpha", "NvimTree", "neo-tree", "trouble" },
         },
         ignore_focus = {},
         always_divide_middle = true,
-        globalstatus = false,
+        -- Barre de statut unique en bas : les splits horizontaux (sp) sont
+        -- alors séparés par WinSeparator (cyan), comme les splits verticaux.
+        globalstatus = true,
         refresh = {
           statusline = 1000,
           tabline = 1000,
@@ -51,8 +54,14 @@ return {
         lualine_z = {},
       },
       tabline = {},
-      winbar = {},
-      inactive_winbar = {},
+      -- Nom de fichier par fenêtre (la barre de statut étant désormais globale).
+      -- Identifie chaque split en haut de sa fenêtre.
+      winbar = {
+        lualine_c = { { "filename", path = 1 } },
+      },
+      inactive_winbar = {
+        lualine_c = { { "filename", path = 1 } },
+      },
       extensions = {},
     })
   end,

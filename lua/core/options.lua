@@ -83,6 +83,19 @@ setup_clipboard()
 opt.splitright = true     -- le split vertical d'une fenêtre s'affiche à droite
 opt.splitbelow = true     -- le split horizontal d'une fenêtre s'affiche en bas
 
+-- Caractères de séparation des fenêtres : traits pleins et continus.
+-- La *couleur* du séparateur est définie par WinSeparator (voir cyberdream.lua).
+opt.fillchars = {
+	vert = "│",       -- séparateur des splits verticaux (vsp)
+	horiz = "─",      -- séparateur des splits horizontaux (sp)
+	horizup = "┴",
+	horizdown = "┬",
+	vertleft = "┤",
+	vertright = "├",
+	verthoriz = "┼",
+	eob = " ",        -- masque les « ~ » des lignes vides en fin de buffer
+}
+
 opt.swapfile = false      -- on supprime le pénible fichier de swap
 
 opt.undofile = true       -- on autorise l'undo à l'infini (même quand on revient sur un fichier qu'on avait fermé)
